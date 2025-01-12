@@ -1,0 +1,50 @@
+// start.scss
+
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000000;
+    font-family: system-ui;
+}
+#game_container {
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+    #language_div {
+        margin-top: 50vh;
+        button{
+            all:unset;
+            color: #ffffff;
+            margin: 1vh;
+            font-size: 4vh;
+            opacity: 0.8;
+        }
+        
+    }
+}
+#click_to_start {
+    all: unset;
+    cursor: pointer;
+    padding: 0.1em 0.8em;
+    font-size: 5vh;
+    background-color: #ffffff;
+    border-radius: 0.5vh;
+    transition: all .1s;
+    margin-top: 5vh;
+    opacity: 0.8;
+}
+#click_to_start:hover {
+    color: #ffffff;
+    background-color: black;
+}
+img {
+    position: fixed;
+    width: calc(95vh/1.8);
+    height: 95vh;
+    border-radius: 1vh;
+    z-index: -1;
+}

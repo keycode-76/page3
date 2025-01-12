@@ -1,0 +1,76 @@
+// scene1.scss
+
+/* loading first */
+@keyframes image_loader1 {
+    0%  { background-image: url("/src/assets/img/scene/home1.png"); }
+    2%  { background-image: url("/src/assets/img/scene/home2.png"); }
+    4%  { background-image: url("/src/assets/img/scene/home3.png"); }
+}
+.image_loader1 {
+    animation: image_loader1 3s steps(40) forwards;
+    opacity: 0;
+};
+
+@keyframes ten_anim { to { background-position-x: 1000%; }}
+.s1-home-1{ background-image: url("/src/assets/img/scene/home1.png"); }
+.s1-home-2{ background-image: url("/src/assets/img/scene/home2.png"); }
+.s1-home-3{ background-image: url("/src/assets/img/scene/home3.png");
+    // background-size: 1000% 100%;
+    // animation: ten_anim 1s steps(10) infinite;
+}
+.s1-mechanic-1{ background-image: url("/src/assets/img/scene/mechanic1.png"); }
+.s1-mechanic-2{ background-image: url("/src/assets/img/scene/mechanic2.png"); }
+
+// 地牢隨機陷阱
+.dungeon-1{ background-image: url("/src/assets/img/way/1.png"); }
+.dungeon-2{ background-image: url("/src/assets/img/way/2.png"); }
+
+.map_aisle_0_1{ background-image: url("/src/assets/img/aisle/0-1.png"); }
+.map_aisle_0_2{ background-image: url("/src/assets/img/aisle/0-2.png"); }
+.map_aisle_1_1{ background-image: url("/src/assets/img/aisle/1-1.png"); }
+.map_aisle_1_2{ background-image: url("/src/assets/img/aisle/1-2.png"); }
+
+.map_wall_0{ background-image: url("/src/assets/img/wall/0.png"); }
+.map_wall_1{ background-image: url("/src/assets/img/wall/1.png"); }
+.map_wall_2{ background-image: url("/src/assets/img/wall/2.png"); }
+
+// 夢境場景
+.s1-dream{ background-image: url("/src/assets/img/scene/dream1.png"); }
+.s1-dream-choice{ background-image: url("/src/assets/img/scene/dream2.png"); }
+.s1-dream-left{ background-image: url("/src/assets/img/scene/dream-left.png"); }
+.s1-dream-right{ background-image: url("/src/assets/img/scene/dream-right.png"); }
+
+// 地道物品
+.item-corpse-1{ background-image: url("/src/assets/img/corpse/1.png");}
+.item-corpse-2{ background-image: url("/src/assets/img/corpse/2.png");}
+.item-corpse-3{ background-image: url("/src/assets/img/corpse/3.png");}
+.item-corpse-4{ background-image: url("/src/assets/img/corpse/4.png");}
+.item-corpse-5{ background-image: url("/src/assets/img/corpse/5.png");}
+.item-corpse-6{ background-image: url("/src/assets/img/corpse/6.png");}
+.item-corpse-7{ background-image: url("/src/assets/img/corpse/7.png");}
+.item-corpse-8{ background-image: url("/src/assets/img/corpse/8.png");}
+.item-corpse-9{ background-image: url("/src/assets/img/corpse/9.png");}
+.item-corpse-10{ background-image: url("/src/assets/img/corpse/10.png");}
+
+.item-landscape-1{ background-image: url("/src/assets/img/landscape/1.png");}
+.item-landscape-2{ background-image: url("/src/assets/img/landscape/2.png");}
+.item-landscape-3{ background-image: url("/src/assets/img/landscape/3.png");}
+.item-landscape-4{ background-image: url("/src/assets/img/landscape/4.png");}
+.item-landscape-5{ background-image: url("/src/assets/img/landscape/5.png");}
+.item-landscape-6{ background-image: url("/src/assets/img/landscape/6.png");}
+.item-landscape-7{ background-image: url("/src/assets/img/landscape/7.png");}
+.item-landscape-8{ background-image: url("/src/assets/img/landscape/8.png");}
+.item-landscape-9{ background-image: url("/src/assets/img/landscape/9.png");}
+.item-landscape-10{ background-image: url("/src/assets/img/landscape/10.png");}
+
+.lostbag-1{ background-image: url("/src/assets/img/lostbag/1.png");}
+.lostbag-2{ background-image: url("/src/assets/img/lostbag/2.png");}
+.lostbag-3{ background-image: url("/src/assets/img/lostbag/3.png");}
+.lostbag-4{ background-image: url("/src/assets/img/lostbag/4.png");}
+.lostbag-5{ background-image: url("/src/assets/img/lostbag/5.png");}
+.lostbag-6{ background-image: url("/src/assets/img/lostbag/6.png");}
+.lostbag-7{ background-image: url("/src/assets/img/lostbag/7.png");}
+.lostbag-8{ background-image: url("/src/assets/img/lostbag/8.png");}
+.lostbag-9{ background-image: url("/src/assets/img/lostbag/9.png");}
+.lostbag-10{ background-image: url("/src/assets/img/lostbag/10.png");}
+

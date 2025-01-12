@@ -1,0 +1,81 @@
+// rwd.scss
+
+$colorG:gray;
+$colorW:white;
+$colorB:black;
+
+
+.screen_landscape {
+    position: absolute;
+    height: 95vh;
+    #screen_ui {
+        // background-color: black;
+    }
+    #btn_left {
+        left: 2vh;
+    }#set_btn {
+        top: 1vh;
+        right: 1vh;
+    }
+    #user_state_div{
+        top:1vh;
+        left: 1vh;
+    }
+    #gunclip{
+        top: 8vh;
+        left: 2vh;
+    }
+}
+
+.screen_portrait {
+    position: fixed;
+    height: 100%;
+
+    #screen_ui {
+        position: absolute;
+        width: 100vw;
+        // bottom: 5vh;
+    }
+    #object_view {
+        #object_img {
+            width: 12vh;
+            height: 12vh;
+        }
+        #object_label {
+            // height: 18vh;
+        }
+        #object_price {
+            height: 5vh;
+        }
+    }
+    #object_bg {
+        width: 100vw;
+        height: 100vh;
+    }
+    #lines_div {
+        position: fixed;
+    }
+    #btn_bag {
+        position: fixed;
+        right: 3%;
+        // bottom: 4%;
+    }#btn_left {
+        position: fixed;
+        left: 3%;
+    }#set_btn {
+        position: fixed;
+        top:1%;
+        right: 1%;
+    }
+    .btns_ux {
+        margin-top: 2vh;
+        // margin-left: 1.3vh;
+    }
+    #gunclip{
+        position: fixed;
+        top: 7%;
+        left: 1%;
+    }
+    
+    
+}

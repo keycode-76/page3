@@ -1,0 +1,41 @@
+{
+    "enemy": {
+        "1": { "name": "Ground_worm", "order":[3,1,1], "attack":1, "heart": 20, "like":"E6D_bullet", "bg": "enemy-1" },
+        "2": { "name": "Rat", "order":[3,1,1], "attack": 1, "heart": 20, "like":"E6D_bullet", "bg": "enemy-2" }     
+    },
+    "corpse": {
+        "1": { "name": "Corpse", "is":1, "bg":"item-corpse-1"},
+        "2": { "name": "Corpse", "is":2, "bg":"item-corpse-2"},
+        "3": { "name": "Corpse", "is":3, "bg":"item-corpse-3"},      
+        "4": { "name": "Corpse", "is":4, "bg":"item-corpse-4"},      
+        "5": { "name": "Corpse", "is":5, "bg":"item-corpse-5"},      
+        "6": { "name": "Corpse", "is":6, "bg":"item-corpse-6"},      
+        "7": { "name": "Corpse", "is":7, "bg":"item-corpse-7"},      
+        "8": { "name": "Corpse", "is":8, "bg":"item-corpse-8"},      
+        "9": { "name": "Corpse", "is":9, "bg":"item-corpse-9"},      
+        "10": { "name": "Corpse", "is":10, "bg":"item-corpse-10"}     
+    },
+    "landscape":{
+        "1": { "is":1, "bg":"item-landscape-1"},
+        "2": { "is":2, "bg":"item-landscape-2"},
+        "3": { "is":3, "bg":"item-landscape-3"},      
+        "4": { "is":4, "bg":"item-landscape-4"},      
+        "5": { "is":5, "bg":"item-landscape-5"},      
+        "6": { "is":6, "bg":"item-landscape-6"},      
+        "7": { "is":7, "bg":"item-landscape-8"},      
+        "9": { "is":9, "bg":"item-landscape-9"},      
+        "10": { "is":10, "bg":"item-landscape-10"}  
+    },
+    "lostbag":{
+        "0": { "is":1, "bg":"lostbag-1"},
+        "1": { "is":1, "bg":"lostbag-1"},
+        "2": { "is":2, "bg":"lostbag-2"},
+        "3": { "is":3, "bg":"lostbag-3"},      
+        "4": { "is":4, "bg":"lostbag-4"},      
+        "5": { "is":5, "bg":"lostbag-5"},      
+        "6": { "is":6, "bg":"lostbag-6"},      
+        "7": { "is":7, "bg":"lostbag-8"},      
+        "9": { "is":9, "bg":"lostbag-9"},      
+        "10": { "is":10, "bg":"lostbag-10"}  
+    }
+}

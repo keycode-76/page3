@@ -1,0 +1,60 @@
+// all main img
+
+@keyframes image_loader1 {
+    0%   { background-image: url("/src/assets/img/ui/portrait/E6D_bullet.png"); }
+    6.25% { background-image: url("/src/assets/img/ui/portrait/A65_bullet.png"); }
+    12.5% { background-image: url("/src/assets/img/ui/portrait/Parasite_bullet.png"); }
+    18.75% { background-image: url("/src/assets/img/ui/portrait/Glare_bullet.png"); }
+    25%   { background-image: url("/src/assets/img/ui/portrait/Corrosion_bullet.png"); }
+    31.25% { background-image: url("/src/assets/img/ui/portrait/Descaling_bullet.png"); }
+    37.5% { background-image: url("/src/assets/img/ui/portrait/Devour_bullet.png"); }
+    43.75% { background-image: url("/src/assets/img/ui/portrait/Thump_bullet.png"); }
+    50%   { background-image: url("/src/assets/img/ui/portrait/Camo_liquid.png"); }
+    56.25% { background-image: url("/src/assets/img/ui/portrait/Raw_meat.png"); }
+    62.5% { background-image: url("/src/assets/img/ui/portrait/An_eyeball.png"); }
+    68.75% { background-image: url("/src/assets/img/ui/portrait/Bloody_heart.png"); }
+    75%   { background-image: url("/src/assets/img/ui/portrait/Hatch.png"); }
+    81.25% { background-image: url("/src/assets/img/ui/portrait/Meat_soup.png"); }
+    87.5% { background-image: url("/src/assets/img/ui/portrait/Impurity_crystal.png"); }
+    93.75% { background-image: url("/src/assets/img/ui/portrait/Obsidian_ring.png"); }
+    100%  { background-image: url("/src/assets/img/ui/portrait/Pyrite_necklace.png"); }
+}
+
+.image_loader1 {
+    animation: image_loader1 3s forwards;
+    opacity: 0;
+}
+
+// 基本物品
+.Bone_piece { background-image: url("/src/assets/img/ui/portrait/Bone_piece.png"); }
+.Flint_stone { background-image: url("/src/assets/img/ui/portrait/Flint_stone.png"); }
+.Fur_pelt { background-image: url("/src/assets/img/ui/portrait/Fur_pelt.png"); }
+.Glass_bottle { background-image: url("/src/assets/img/ui/portrait/Glass_bottle.png"); }
+.Raw_meat { background-image: url("/src/assets/img/ui/portrait/Raw_meat.png"); }
+// 合成物品
+.Meat_soup { background-image: url("/src/assets/img/ui/portrait/Meat_soup.png"); }
+.Offal_soup { background-image: url("/src/assets/img/ui/portrait/Meat_soup.png"); }
+
+// 武器按鈕
+#attack_idle { background-image: url("/src/assets/img/ui/weapon/attack_idle.png");}
+#defense_idle { background-image: url("/src/assets/img/ui/weapon/defense_idle.png");}
+.attack_idle { background-image: url("/src/assets/img/hand/attack_idle.png"); }
+.defense_idle { background-image: url("/src/assets/img/hand/defense_idle.png"); }
+// 手部
+.attack_Bone_piece { background-image: url("/src/assets/img/hand/attack_Bone_piece.png"); }
+.attack_Flint_stone { background-image: url("/src/assets/img/hand/attack_Flint_stone.png"); }
+.attack_Fur_pelt { background-image: url("/src/assets/img/hand/attack_Fur_pelt.png"); }
+.attack_Glass_bottle { background-image: url("/src/assets/img/hand/attack_Glass_bottle.png"); }
+.heal_Raw_meat { background-image: url("/src/assets/img/hand/heal_Raw_meat.png"); }
+.heal_Meat_soup { background-image: url("/src/assets/img/hand/heal_Meat_soup.png"); }
+// 相簿
+.Entrance { background-image: url("/src/assets/img/album/Entrance.png"); }
+.Team_leader { background-image: url("/src/assets/img/album/Team_leader.png"); }
+
+// 效果圖片
+#burn_icon { background-image: url("/src/assets/img/ui/nerf_burn.png");}
+#infect_icon { background-image: url("/src/assets/img/ui/nerf_infect.png");}
+#phonophobia_icon { background-image: url("/src/assets/img/ui/nerf_phonophobia.png");}
+#carapace_icon { background-image: url("/src/assets/img/ui/buff_carapace.png");}
+#flexibility_icon { background-image: url("/src/assets/img/ui/buff_flexibility.png");}
+#anger_icon { background-image: url("/src/assets/img/ui/buff_anger.png");}

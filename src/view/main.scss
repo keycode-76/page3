@@ -1,0 +1,1779 @@
+// main.scss
+
+$colorR:rgb(133, 14, 6);
+$colorBT:rgba(0, 0, 0, 0.4);
+$colorWT:rgba(255, 255, 255, 0.5);
+$colorW:white;
+$colorB:black;
+$colorG:gray;
+input,
+textarea,
+button,
+select,
+div,
+img,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+    * {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        background-size: cover;
+        
+    }
+}
+
+@keyframes animatedBackground {
+    from { background-position: 0 0; }
+    to { background-position: -10000px -10000px; }
+}
+#background {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    // background: url("/src/assets/img/main/background.png");
+    background-repeat: repeat;
+    background-position: 0 0;
+    background-size: auto 100%;
+    animation: animatedBackground 500s linear infinite;
+    z-index: -10;
+}
+#screen {
+    user-select: none; // 禁止選取
+    width: calc(95vh/1.8);
+    flex-direction: column;
+    justify-content: start;
+    animation: screen_anim .2s ease-out;
+    #screen_bg{
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background-color: $colorB;
+    }
+    #screen_cover {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        pointer-events: none;
+    }
+    #screen_ui {
+        // backdrop-filter: brightness(150%);
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+        // position: relative;
+        // margin-top: -5vh;
+    }
+    @keyframes border_anim {
+        0% { 
+            box-shadow: inset 0 0 2vh $colorB;
+        }
+        50% { opacity: 0.8;}
+        100% { 
+            box-shadow: inset 0 0 2vh $colorB;
+        }
+    }
+    #screen_border {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        // border: 1vh solid $colorB;
+        animation: border_anim 1.5s infinite ease-in-out;
+        z-index: 10;
+    }
+}
+#scene {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    animation: twice_anim .5s steps(2) infinite ;
+    #scene_ux {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top:0px;
+    }
+    #scene_bg {
+        width: 100%;
+        height: 100%;
+        // border-radius: 1vh;
+    }
+}
+@keyframes cursor_anim {
+    to { background-position-x: -600%; }}
+.click_anim {
+    animation: cursor_anim .2s steps(6) forwards;
+}
+#cursor {
+    position: fixed;
+    width: 3vh;
+    height: 3vh;
+    background-image: url("/src/assets/img/efx/cursor.png");
+    z-index: 5;
+    pointer-events: none;
+    // animation: cursor_ani m .3s steps(6) infinite ;
+}
+
+// SET & END & EFX-------------------------------------------------------
+#set_div{ // z 10
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding-top: 8vh;
+    background: $colorB;
+    color: $colorW;
+    font-size: 2vh;
+    flex-direction: column;
+    // transition: all 1s;
+    .set_topic {
+        width: 70%;
+        border: $colorG solid 1px;
+        margin-bottom: 1vh;
+        opacity: 0.5;
+        cursor: pointer;
+        &:hover {
+            opacity: 1;
+        };
+    }
+    #set_detail {
+        height: 30vh;
+        width: 70%;
+        flex-direction: column;
+        text-wrap: wrap;
+    }
+    #volume_div {
+        div {
+            margin: 1vh;
+        }
+        .volume_btn {
+            cursor: pointer;
+        }
+    };
+    .achieve_slot {
+        // width: 70%;
+        padding: 0 2vh;
+        // border: $colorG solid 1px;
+        // opacity: 0.5;
+    }
+    
+}
+#end_div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    // padding-top: 8vh;
+    background: $colorB;
+    color: $colorW;
+    font-size: 2vh;
+    flex-direction: column;
+    z-index: 2;
+    #end_img {
+        width: 25vh;
+        height: 25vh;
+        background-image: url("/src/assets/img/scene/end1.png");
+    }
+    #end_label {
+        width: 70%;
+        height: 20vh;
+        // border: $colorG solid 1px;
+        opacity: 0.5;
+    }
+    #end_retry {
+        width: 70%;
+        border: $colorG solid 1px;
+        margin-bottom: 1vh;
+        cursor: pointer;
+        opacity: 0.5;
+    }
+}
+// 對話
+@keyframes show_anim {
+    0% { opacity: 0;}
+    100% { opacity: 100%;}
+}
+#lines_div {
+    position: absolute;
+    width: 100%;
+    bottom: 0vh;
+    height: auto;
+    padding-bottom: 7vh;
+    flex-direction: column;
+    backdrop-filter: blur(2px);
+    backdrop-filter: drop-shadow(10px $colorB);
+    word-break: break-all;
+    opacity: 0.8;
+    #lines_text {
+        padding: 1vh 2vh;
+        width: 90%;
+        font-size: 2.5vh;
+        justify-content: start;
+        box-shadow: inset 0 0 1vh $colorB;
+        animation: show_anim .3s ease-in-out;
+        background-image: url("/src/assets/img/line.png");
+    }
+    #lines_btn {
+        width: 4vh;
+        height: 4vh;
+        pointer-events: auto;
+        background-image: url("/src/assets/img/ui/btn-line.png");
+        cursor: pointer;
+        opacity: 0.5;
+        animation: lines_btn_anim 1.5s infinite;
+        @keyframes lines_btn_anim { 50% { 
+            opacity: 0.4;
+            transform: translateY(-1%);}}
+    };
+    #lines_name {
+        display: block;
+        width: 100%;
+        text-align: start;
+        padding-left: 3vh;
+        margin-bottom: 1vh;
+        font-size: 2vh;
+        font-weight: bold;
+        color: $colorG;
+                    // -webkit-filter: drop-shadow(2px 2px 0 white)
+        //                     drop-shadow(-2px 2px 0 white)
+        //                     drop-shadow(2px -2px 0 white)
+        //                     drop-shadow(-2px -2px 0 white);
+        
+        filter: drop-shadow(1px 1px 0 $colorBT)
+                drop-shadow(-.5px 1px 0 $colorBT)
+                drop-shadow(1px -1px 0 $colorBT)
+                drop-shadow(-1px -.5px 0 $colorBT);
+        // background-color: $colorG;
+    }
+}
+#lines_pass_btn {
+    position: absolute;
+    right: 3vh;
+    bottom: 7.4vh;
+    border-radius: 1px; 
+    pointer-events: auto;
+    color: $colorG;
+    font-size: 2.5vh;
+    // opacity: 0.5;
+    cursor: pointer;
+                // -webkit-filter: drop-shadow(2px 2px 0 white)
+    //                     drop-shadow(-2px 2px 0 white)
+    //                     drop-shadow(2px -2px 0 white)
+    //                     drop-shadow(-2px -2px 0 white);
+    
+    filter: drop-shadow(1px 1px 0 $colorBT)
+            drop-shadow(-.5px 1px 0 $colorBT)
+            drop-shadow(1px -1px 0 $colorBT)
+            drop-shadow(-1px -.5px 0 $colorBT);
+}
+.lines_passing {
+    animation: bgColorChange 1s forwards ease-in;
+}
+@keyframes bgColorChange {
+    0% { opacity: 0.5; }
+    40% { opacity: 1; color: $colorW; box-shadow:  0 0 2vh $colorG; background-color: rgba(255, 255, 255, .2) }
+}
+// 流血畫面
+#covered_in_blood {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+.blood_1 {
+    animation: covered_in_blood 1s linear;
+    background-image: url("/src/assets/img/efx/1.png");
+}
+.blood_2 {
+    animation: covered_in_blood 1s linear;
+    background-image: url("/src/assets/img/efx/2.png");
+}
+@keyframes covered_in_blood { 100% { opacity: 0; } }
+// 死亡
+.dead_efx {
+    background-size: 600% 100%;
+    background-image: url("/src/assets/img/efx/3.png");
+    animation: dead_efx 1s steps(6) forwards;
+};
+@keyframes dead_efx { to { background-position-x: -600%; }}
+// 理智
+.sanity_efx {
+    background-size: 600% 100%;
+    background-image: url("/src/assets/img/efx/3.png");
+    animation: sanity_efx .9s steps(6) forwards;
+};
+@keyframes sanity_efx { to { background-position-x: -600%; }}
+#sanity_dice {
+    position: absolute;
+    width: 20vh;
+    height: 10vh;
+    border: 1px white soild;
+    color: white;
+    pointer-events: auto;
+    z-index: 1;
+    pointer-events: "auto";
+    cursor: pointer;
+}
+// 重複確認
+#double_check_div {
+    position: absolute;
+    width: 100%;
+    bottom: 40vh;
+    z-index: 2;
+
+    // border: white solid 1px;
+}
+#double_check_box {
+    // margin: 0vh 5vh;
+    padding: 2vh;
+    bottom: 50vh;
+    background-color: $colorB;
+    border: white solid 1px;
+    flex-direction: column;
+    color: $colorW;
+    
+    #double_check_label {
+        margin: 1vh;
+        word-break: break-all;
+
+    }
+}
+// 對打區
+@keyframes heart_out_anim {
+    to { opacity: 0;}
+}
+.heart_out_anim {
+    animation: heart_out_anim 1s linear;
+}
+#gunclip{
+    position: absolute;
+    .clip_icon {
+        width: 5vh;
+        height: 5vh;
+    }
+}
+
+@keyframes heart_jump {
+    0% {
+        transform: scale(1); }
+    15% {
+        transform: scale(1.1) translateY(-3px); /* 略微放大並向左移動 */ }
+    30% {
+        transform: scale(1.2) translateY(-5px); /* 更大並向右移動 */ }
+    75% {
+        transform: scale(1.1) translateY(-3px); /* 回到略微放大的狀態 */ }
+    100% {
+        transform: scale(1); /* 回到初始狀態 */
+        opacity: 0; /* 最後淡出 */ }
+}
+.heart_jump {
+    animation: heart_jump .4s linear;
+}
+
+@keyframes note_jump {
+    0% { transform: translateY(0); opacity: 0;}
+    50% { transform: translateY(-10%);}
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+.note_jump {
+    margin-top: 1vh;
+    background-color: $colorBT;
+    box-shadow:  0 0 10px rgba(0, 0, 0, 0.8);
+    animation: note_jump .8s linear;
+}
+.note_hide {
+    // display: none;
+    width: 3.5vh;
+    height: 3.5vh;
+    margin-top: 1vh;
+    opacity: 0;
+    // background-color: red; 
+}
+
+.state_anim {
+    animation: note_jump .4s linear;
+}
+// 敵人狀態
+#enemy_heart_icon { 
+    width: 5vh;
+    height: 5vh;
+    background-image: url("/src/assets/img/ui/heart.png");
+}
+#enemy_heart_div{
+    #enemy_harm_note {
+        width: 3.5vh;
+        height: 3.5vh;
+        padding-right: .5vh;
+        margin-top: 0;
+        font-weight: bold;
+        border-radius: 5vh;
+        color: $colorW;
+        background-color: $colorBT;
+        box-shadow:  0 0 10px $colorBT;
+        -webkit-filter: drop-shadow(1px 1px 0 $colorR)
+                        drop-shadow(-1px 1px 0 $colorR)
+                        drop-shadow(1px -1px 0 $colorR)
+                        drop-shadow(-1px -1px 0 $colorR);
+    
+        filter: drop-shadow(1px 1px 0 $colorR)
+                drop-shadow(-1px 1px 0 $colorR)
+                drop-shadow(1px -1px 0 $colorR)
+                drop-shadow(-1px -1px 0 $colorR);
+    }
+    #enemyLabel {
+        color: $colorG;
+    }
+}
+.enemy_divs {
+    flex-direction: column;
+    cursor: pointer;
+    pointer-events: auto;
+    .enemy_icon {
+        width: 3.5vh;
+        height: 3.5vh;
+    }
+}
+#enemy_state_div {
+    position: absolute;
+    top: 18vh;
+    color: $colorG;
+    flex-direction: column;
+
+    #state_display_div {
+        // border: $colorG solid 1px;
+        #enemy_nerf_div {
+            width: 18vh;
+            // border: $colorG solid 1px;
+        }
+        #enemy_buff_div {
+            width: 18vh;
+            // border: $colorG solid 1px;
+        }
+    }
+    #state_note_div {
+        border: $colorG solid 1px;
+
+    }
+}
+// UI SYSTEM -------------------------------------------------------
+@keyframes pop_anim {
+    0% { transform: scale(0.9)}
+    2% { transform: scale(1); opacity: 1;}
+    80% { opacity: 1; }
+    100% { opacity: 0;  }
+}
+// 跳通知
+#pop_note {
+    position: absolute;
+    top: 2vh;
+    left: 1vh;
+    // bottom: 1vh;
+    padding: .5vh 2vh;
+    font-weight: bold;
+    color: $colorB;
+    text-align: center;
+    font-size: 2vh;
+    animation: pop_anim 2.2s linear;
+    z-index: 1;
+    // box-shadow:  0 0 .5vh $colorG;
+    -webkit-filter: drop-shadow(1px 1px 0 $colorWT)
+                drop-shadow(-1px 1px 0 $colorWT)
+                drop-shadow(1px -1px 0 $colorWT)
+                drop-shadow(-1px -1px 0 $colorWT);
+        
+    filter: drop-shadow(1px 1px 0 $colorWT)
+            drop-shadow(-1px 1px 0 $colorWT)
+            drop-shadow(1px -1px 0 $colorWT)
+            drop-shadow(-1px -1px 0 $colorWT);
+}
+// 地圖
+#user_locate_div {
+    position: absolute;
+    top: 2vh;
+    right: 3vh;
+    flex-direction: column;
+    align-items: center;
+    color: $colorG;
+    font-size: 2vh;
+    &::before {
+        content: "";
+        position: absolute;
+        width: 10vh;
+        height: 10vh;
+        top:4vh;
+        background-color: rgba(0, 0, 0, .8);
+        border-radius: 5vh;
+        box-shadow: 0 0 1vh $colorWT;
+    }
+    #user_map_compass {
+        padding: 0 .5vh;
+        margin-top: 1vh;
+        border-radius: 5vh;
+        background-color: $colorBT;
+        box-shadow: 0 0 .5vh $colorBT;
+    }
+    .rotate_L_N{
+        animation: rotate_L_N .2s linear;
+        @keyframes rotate_L_N {
+            0% { transform: rotate(0deg);}
+            20% { transform: rotate(45deg);}
+            100% { transform: rotate(90deg);}
+        }
+    }
+    .rotate_L_S{
+        animation: rotate_L_S .2s linear;
+        @keyframes rotate_L_S {
+            0% { transform: rotate(-180deg);}
+            20% { transform: rotate(-135deg);}
+            100% { transform: rotate(-90deg);}
+        }
+    }
+    .rotate_L_E{
+        animation: rotate_L_E .2s linear;
+        @keyframes rotate_L_E {
+            0% { transform: rotate(-90deg);}
+            20% { transform: rotate(-45deg);}
+            100% { transform: rotate(0deg);}
+        }
+    }
+    .rotate_L_W{
+        animation: rotate_L_W .2s linear;
+        @keyframes rotate_L_W {
+            0% { transform: rotate(90deg);}
+            20% { transform: rotate(135deg);}
+            100% { transform: rotate(180deg);}
+        }
+    }
+    .rotate_R_N{
+        animation: rotate_R_N .2s linear;
+        @keyframes rotate_R_N {
+            0% { transform: rotate(0deg);}
+            20% { transform: rotate(-45deg);}
+            100% { transform: rotate(-90deg);}
+        }
+    }
+    .rotate_R_E{
+        animation: rotate_R_E .2s linear;
+        @keyframes rotate_R_E {
+            0% { transform: rotate(270deg);}
+            20% { transform: rotate(225deg);}
+            100% { transform: rotate(180deg);}
+        }
+    }
+    .rotate_R_S{
+        animation: rotate_R_S .2s linear;
+        @keyframes rotate_R_S {
+            0% { transform: rotate(180deg);}
+            20% { transform: rotate(135deg);}
+            100% { transform: rotate(90deg);}
+        }
+    }
+    .rotate_R_W{
+        animation: rotate_R_W .2s linear;
+        @keyframes rotate_R_W {
+            0% { transform: rotate(90deg);}
+            20% { transform: rotate(45deg);}
+            100% { transform: rotate(0deg);}
+        }
+    }
+}
+#mini_map_div {
+    width: 10vh;
+    height: 10vh;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+    -webkit-mask-image: radial-gradient(circle, $colorW 1vh, rgba(0, 0, 0, 0) 5vh);
+    mask-image: radial-gradient(circle, $colorW 1vh, rgba(0, 0, 0, 0) 5vh);
+
+    #map_tile_container {
+        display: grid;
+        gap: .5vh;
+        .tile {
+            width: 1vh;
+            height: 1vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .path { border: 1px solid $colorG; }
+        .landmark { background-color: $colorG; }
+        .unvisited { 
+            border: 1px solid rgb(50, 50, 50);}
+    }
+
+    #mini_map_padder {
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* 控制按鈕 */
+    .controls { 
+        position: absolute;
+        margin-top: 10px;
+    }
+
+    /* 遮色片樣式 */
+    #mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, .5); /* 黑色遮罩 */
+    pointer-events: none; /* 讓遮罩層不會影響點擊事件 */
+    z-index: 1; /* 保證遮罩層在最上面 */
+    }
+
+    /* 黑色遮罩 */
+    #blackout {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, .8); /* 黑色遮罩 */
+        z-index: 0;
+    }
+}
+#full_map_div{
+    width: 100%;
+    height: 100%;
+    background-color: $colorB;
+    flex-direction: column;
+    pointer-events: block;
+    z-index: 1;
+    #full_map_padder {
+        justify-content: center;
+        align-items: center;   
+        background-color: $colorBT; /* 黑色遮罩 */
+        -webkit-mask-image: radial-gradient(circle, $colorW 18vh, rgba(0, 0, 0, 0) 25vh);
+    }
+    #map_compress_div {
+        position: absolute;
+        // top:0;
+        width: 100%;
+        height: 52vh;
+        box-shadow: inset 0 0 1vh $colorG;
+        .map_compresses { 
+            position: absolute;
+            width: 5vh;
+            height: 5vh;
+            color: $colorG
+        };
+        #map_compress_N { top:0; };
+        #map_compress_E { right:0; };
+        #map_compress_S { bottom:0; };
+        #map_compress_W { left:0; };
+    }
+    #map_tile_container {
+        display: grid;
+        gap: .3vh;
+        // border: 1px solid $colorG;
+
+        .tile {
+            width: 3vh;
+            height: 3vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: .3vh;
+            box-shadow:  0 0 .2vh rgb(100,100,100);
+            // box-shadow: inset 0 0 .1vh $colorWT;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+        .path { 
+            box-shadow: inset 0 0 1vh $colorG;
+        }
+        .landmark { 
+            background-color: $colorG; 
+            box-shadow: inset 0 0 1vh $colorB;
+        }
+        .unvisited { 
+            background-color: $colorBT; 
+            box-shadow:  0 0 .2vh rgb(100,100,100);
+            // box-shadow: inset 0 0 1vh $colorB;
+            pointer-events: none;
+        }
+    }
+    #map_full_container {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        flex-direction: column;
+        // box-shadow: inset 0 0 1vh $colorG;
+    }
+    #map_locat_title {
+        width: 100%;
+        color: $colorG;
+        padding: 1vh 2vh;
+        font-size: 1.5vh;
+        justify-content: start;
+        // box-shadow: inset 0 0 1vh $colorG;
+    }
+    #map_locat_info {
+        width: 100%;
+        color: $colorG;
+        padding: 1vh 2vh;
+        justify-content: start;
+        // box-shadow: inset 0 0 1vh $colorG;
+       }
+    #map_btn_container {
+        margin-bottom: 2vh;
+    }
+    .map_btns {
+        width: 8vh;
+        height: 8vh;
+        margin: .46vh;
+        color: $colorG;
+        pointer-events: auto;
+        cursor: pointer;
+        box-shadow: inset 0 0 1vh $colorG;
+    }
+    #map_right_btn { background-image: url("/src/assets/img/ui/map_right.png"); };
+    #map_left_btn { background-image: url("/src/assets/img/ui/map_left.png"); };
+    #map_up_btn { background-image: url("/src/assets/img/ui/map_up.png"); };
+    #map_down_btn { background-image: url("/src/assets/img/ui/map_down.png"); };
+    #map_now_btn { background-image: url("/src/assets/img/ui/map_now.png"); };
+    #map_close_btn { background-image: url("/src/assets/img/ui/map_close.png"); };
+}
+.map_player { 
+    animation: map_player .8s ease-out infinite;
+    @keyframes map_player {
+        50% { filter: brightness(250%);}
+    }
+}
+.map_sanity {
+    // background-color: rgb(30,30,30);
+    scale: (1.2);
+    box-shadow: 0 0 1vh $colorR;
+    animation: .1s map_sanity_anim infinite;
+    @keyframes map_sanity_anim {
+        50%{ transform: translateY(10%); transform: translateX(-10%); background-color: $colorR;}
+        100%{ transform: translateY(-10%); transform: translateX(10%); background-color: $colorR;}
+    }
+}
+
+// 按鈕
+.ux_btns {
+    position: absolute;
+    cursor: pointer;
+    pointer-events: auto;
+    // border: 1px solid blue;
+    left: 0vh;
+    top: 72vh;
+    width: 6vh;
+    height: 15vh;
+}
+.ui_btns {
+    position: absolute;
+    width: 5vh;
+    height: 5vh;
+    bottom: 10vh;
+    // z-index: 1;
+    pointer-events: auto;
+    transition: transform 0.5s ease;
+    cursor: pointer;
+    filter: drop-shadow(1px 1px 0 $colorWT)
+                drop-shadow(-1px 1px 0 $colorWT)
+                drop-shadow(1px -1px 0 $colorWT)
+                drop-shadow(-1px -1px 0 $colorWT)
+
+                brightness(50%);
+                
+}
+#btn_forward{
+    background-image: url("/src/assets/img/ui/btn-forward.png");    
+}#btn_return {
+    background-image: url("/src/assets/img/ui/btn-return.png");
+}#btn_left {
+    background-image: url("/src/assets/img/ui/btn-left.png");    
+}#btn_right {
+    right: 2vh;
+    background-image: url("/src/assets/img/ui/btn-right.png");    
+}#set_btn {
+    position: absolute;
+    width: 3.5vh;
+    height: 3.5vh;
+    background-image: url("/src/assets/img/ui/btn-set.png");
+    cursor: pointer;
+    transition: all .5s;
+    opacity: 0.5;
+    &:hover {
+        opacity: 1;
+    }
+}#btn_ring_bell {
+    top: 2vh;
+    width: 4vh;
+    height: 4vh;
+    background-image: url("/src/assets/img/ui/btn-bell.png");    
+}
+.share_box {
+    // width: 4vh;
+    // height: 4vh;
+    background: linear-gradient(135deg, #e6e6e6 22%, $colorWT 72%);
+    border-radius: 100%;
+    background-size: 1000% 1000%;
+    animation: change-radius 10s ease-in-out infinite alternate,
+    change-position 3s linear infinite alternate;
+    filter: blur(5px);
+    @keyframes change-radius {
+        0%, 100% {
+            border-radius: 68% 55% 80% 50% / 68% 60% 70% 55%;
+        }
+        20% {
+            border-radius: 37% 63% 51% 49% / 37% 65% 35% 63%;
+        }
+        40% {
+            border-radius: 36% 64% 64% 36% / 64% 48% 52% 36%;
+        }
+        60% {
+            border-radius: 37% 63% 51% 49% / 30% 30% 70% 70%;
+        }
+        80% {
+            border-radius: 40% 60% 42% 58% / 41% 51% 49% 59%;
+        }
+        }
+    @keyframes change-position {
+    100% {
+        background-position: 100% 50%;
+    }
+    }
+}
+// 獎勵 -------------------------------------------------------
+#reward_div {
+    width: 100%;
+    padding: .5vh;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: rgb(30, 30, 30);
+    border: $colorG solid 1px;
+    .reward_slot {
+        margin: 0 .2vh;
+        width: 12vh;
+        // height: 40vh;
+        flex-direction: column;
+        justify-content: start;
+        border: $colorG solid 1px;
+        box-shadow:  0 0 3px $colorG;   /*內圈光暈*/
+        background-color: black;
+        pointer-events: auto;
+        .reward_img {
+            width: 5vh;
+            height: 5vh;
+            margin-top: 5px;
+        }
+        .reward_num {
+            width: 100%;
+            margin-top: -20px;
+            padding-right: 10px;
+            justify-content: end;
+        }
+    }
+}
+#reject_reward_btn {
+    // width: 100px;
+    margin-top: 2vh;
+    padding: 1vh 0;
+    background-color: $colorB;
+    border: $colorG solid 1px;
+    color: $colorG;
+    pointer-events: auto;
+    z-index: 1;
+}
+#btn_album {
+    position: absolute;
+    width: 4vh;
+    height: 4vh;
+    pointer-events: auto;
+    bottom: 0vh;
+    right: 8vh;
+    background-image: url("/src/assets/img/ui/btn-album.png");
+}
+#btn_bag {
+    position: absolute;
+    width: 5vh;
+    height: 5vh;
+    pointer-events: auto;
+    bottom: 0vh;
+    right: 1vh;
+    background-image: url("/src/assets/img/ui/btn-bag.png");
+}
+// 玩家狀態
+#user_states_div {
+    width: 100%;
+    margin-top: .1vh;
+    justify-content: start;
+    
+    background-color: $colorB;
+    box-shadow: 0 0 .5vh $colorB;
+    pointer-events: auto;
+    *{
+        align-items: start;
+    }
+   
+    #user_heart_icon {
+        background-image: url("/src/assets/img/ui/user_heart.png");
+        animation: user_state_icon 4.8s steps(2) infinite;
+    }
+    #user_sanity_icon {
+    }
+    .sanity_safe {
+        background-image: url("/src/assets/img/ui/user_sanity_1.png");
+        animation: user_state_icon 8s steps(2) infinite;
+    }
+    .sanity_danger {
+        background-image: url("/src/assets/img/ui/user_sanity_2.png");
+        animation: user_state_icon 2s steps(2) infinite;
+    }
+    .user_state_icon {
+        width: 5vh;
+        height: 5vh;
+        // margin-left: 1vh;
+        // margin-right: 1vh;
+        @keyframes user_state_icon {
+            93% { background-position-x: 0%; }
+            95% { background-position-x: 200%; }
+            50% { filter:brightness(130%) }
+        }
+    }
+    .user_each_state {
+        height: 100%;
+        padding: 0vh 1vh;
+        // box-shadow:  0 0 .5vh rgba(255, 255, 255, 1);
+        .user_state_contain {
+            align-items: center;
+            height: 100%;
+            padding: 0vh 1vh;
+            .user_state_limit {
+                opacity: 0.5;
+            }
+        }
+    }
+
+}
+// ITEM OPERATE AREA -------------------------------------------------------
+.item_slot {
+    width: 7vh;
+    height: 7vh;
+    position: relative;
+    // margin-bottom: .2vh;
+    box-shadow:  0 0 3px $colorG;
+    background-color: $colorB;
+    // border: $colorG solid 1px;
+    pointer-events: auto;
+    cursor: pointer;
+}
+.all_titles {
+    width: 100%;
+    padding: .2vh 1vh;
+    padding-top: 1vh;
+    justify-content: start;
+    font-weight: bold;
+}
+// 商店
+// 儲物箱
+// 合成物品
+#item_operation_panel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 0vh;
+    padding-bottom: 0;
+    font-size: 2vh;
+    color: $colorG;
+    pointer-events: none;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    flex-direction: column-reverse;
+    justify-content: end;
+    z-index: 1;
+}
+// 系統櫃
+#facility_div {
+    width: 100%;
+    // margin-bottom: .3vh;
+    flex-direction: column;
+    background-color: $colorB;
+    pointer-events: auto;
+    animation: facility_div_anim .6s forwards ease;
+    box-shadow: inset 0 0 1vh $colorWT;
+    #facility_box {
+        width: 100%;
+        padding: 1vh;
+        display: grid;
+        grid-template-columns: repeat(7, 0fr);
+        justify-content: start;
+    }
+    #facility_title {
+        color: $colorR;
+        background: 
+        linear-gradient(127deg, $colorWT, $colorB 70.71%), 
+        linear-gradient(217deg, $colorB, $colorG 70.71%),;
+        box-shadow: inset 0 0 1vh $colorWT;
+
+    }
+    #facility_trust {
+        width: 100%;
+        padding: .2vh 1vh;
+        justify-content: start;
+        // color: $colorR;
+        // background: 
+        // linear-gradient(127deg, $colorWT, $colorB 70.71%), 
+        // linear-gradient(217deg, $colorB, $colorG 70.71%), 
+    }
+}
+@keyframes facility_div_anim {
+    0% {
+        transform: translateX(10%);
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0%);
+    }
+}
+.craftable_item {
+    width: 6vh;
+    height: 6vh;
+    border: $colorG solid 1px;
+    pointer-events: auto;
+    cursor: pointer;
+}
+.bag_item_num {
+    position: absolute;
+    right: .5vh;
+    bottom: .3vh;
+    background-color: $colorBT;
+}
+.box_inventory {
+    width: 100%;
+    padding: 1vh;
+    display: grid;
+    justify-content: start;
+    grid-template-columns: repeat(7, 0fr);
+}
+// 包包跟相簿
+.box_div {
+    width: 100%;
+    flex-direction: column;
+    pointer-events: auto;
+    animation: bag_inventory_anim .6s forwards ease;
+    box-shadow: inset 0 0 .5vh $colorWT;
+    & {background: 
+        linear-gradient(127deg, $colorB, rgb(20,20,20) 70.71%), 
+        linear-gradient(217deg, $colorG, $colorB 70.71%)};
+    #bag_title {
+        color: $colorWT;
+        animation: bag_inventory_anim .6s forwards ease;
+    }
+}
+
+@keyframes bag_inventory_anim {
+    0% {
+        transform: translateY(10%);
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}
+
+#bag_close_panel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: all;
+    z-index: -1;
+}
+// 物品顯示面板
+.object_btns {
+    width: 100%;
+    height: 100%;
+    min-width: 10vh;
+    box-shadow: 0 0 .5vh $colorG;
+    border: .2vh solid $colorG;
+    margin: .5vh;
+    font-weight: bold;
+    cursor: pointer;
+    pointer-events: auto;
+    
+}
+#object_trade_div {
+    width: 100%;
+    // border: $colorG solid 1px;
+    margin-top: .5vh;
+    height: 100%;
+}
+#object_counter {
+    margin: 2vh 0;
+    // border: $colorG solid 1px;
+    #object_num_text {
+        font-weight: bold;
+        font-size: 4vh;
+        color: $colorB;
+        margin: 0 2vh;
+            // -webkit-filter: drop-shadow(2px 2px 0 white)
+        //                     drop-shadow(-2px 2px 0 white)
+        //                     drop-shadow(2px -2px 0 white)
+        //                     drop-shadow(-2px -2px 0 white);
+        
+        filter: drop-shadow(1px 1px 0 $colorG)
+                drop-shadow(-.5px 1px 0 $colorG)
+                drop-shadow(1px -1px 0 $colorG)
+                drop-shadow(-1px -.5px 0 $colorG);
+    }
+    #object_num_add {
+        width: 6vh;
+        height: 6vh;
+        background-image: url("/src/assets/img/ui/btn-right.png");  
+        // box-shadow: 0 0 .5vh $colorWT;
+        pointer-events: auto;
+        cursor: pointer;
+        opacity: 0.4;
+    }
+    #object_num_sub {
+        width: 6vh;
+        height: 6vh;
+        background-image: url("/src/assets/img/ui/btn-left.png");  
+        // border-color: transparent $colorG transparent transparent ;
+        // box-shadow: 0 0 .5vh $colorWT;
+        pointer-events: auto;
+        cursor: pointer;
+        opacity: 0.4;
+    }
+}
+#object_div {
+    width: 100%;
+    word-wrap: break-word;
+    pointer-events: auto;
+    background-color: $colorB;
+    box-shadow: inset 0 0 .5vh $colorWT;
+    background: 
+    linear-gradient(127deg, $colorB, rgb(20,20,20) 70.71%), 
+    linear-gradient(217deg, $colorG, $colorB 70.71%),;
+    #object_left_div {
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        #object_label {
+            max-width: 22vh;
+            padding: 1vh;
+            margin: .5vh;
+            animation: bag_inventory_anim .6s forwards ease;
+            // background-color: $colorBT;
+            overflow-wrap: anywhere;
+        }
+    }
+    #object_right_div {
+        width: 100%;
+        height: 100%;
+        padding: .5vh;
+        justify-content: start;
+        flex-direction: column;
+    }
+    // #object_upgrade_btn {
+    //     width: 8vh;
+    //     // height: 12vh;
+    //     // margin-left: 1vh;
+    //     padding: .5vh;
+    //     font-size: 1.5vh;
+    //     // border: $colorG solid 1px;
+    //     background-color: $colorBT;
+    //     pointer-events: auto;
+    // }
+
+}
+.object_div_fade { 
+    z-index: -1;
+    animation: object_div_fade .4s ease-in-out; 
+    @keyframes object_div_fade { 
+        0% { height: 20vh; filter: brightness(50%)}
+        100% { height: 0px; filter: brightness(0%); opacity: 0;} }
+}
+#object_album_btn {
+    width: 30vh;
+    height: 30vh;
+}
+
+.sanity_choice_battle { background-image: url("/src/assets/img/ui/item/3.png"); }
+
+// 戰鬥區 -------------------------------------------------------
+#battle_div {
+    width: 100%;
+    height: 100%;
+    background-color: $colorB;
+    #battle_enemy_img {
+        position: absolute;
+        top: 8vh;
+        width: 35vh;
+        height: 35vh;
+        // transition: all 0.5s ease;
+    }
+    #battle_light {
+        margin-bottom: 40vh;
+        width: 25vh;
+        height: 25vh;
+        background: linear-gradient(217deg, $colorWT, rgba(255, 0, 0, 0) 70.71%), 
+        linear-gradient(127deg, $colorW, rgba(0, 255, 0, 0) 70.71%), 
+        linear-gradient(336deg, $colorWT, rgba(0, 0, 255, 0) 70.71%);
+        border-radius: 50%;
+        filter: blur(8vh);
+        animation: enemy_anim 1.2s infinite ease-out;
+    }
+    .enemy_faded_out {
+        animation: enemy_faded_out 3s ease-out forwards;
+    }
+    @keyframes enemy_faded_out {
+        0% { filter: brightness(1); }
+        40% {filter: brightness(0); opacity: 1;}
+        100% {filter: brightness(0); opacity: 0;}
+    }
+}
+@keyframes enemy_anim {
+    50% { opacity: .9; scale: .995; }
+}
+.enemy_anim {
+    animation: enemy_anim .5s infinite ease-out;
+    transition: all 0.5s ease;
+}
+// 標準
+#user_hand {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    animation: enemy_anim .3s infinite ease-out;
+}
+.idle_move {
+    // animation: show_anim 1.5s linear;
+    background-image: url("/src/assets/img/hand/idle.png");
+}
+#weapon_column{
+    position: absolute;
+    bottom: 12vh;
+    flex-direction: column;
+    transition: all .3s ease-in-out;
+    #weapon_information {
+        width: 45vh;
+        color: $colorG;
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        background-color: $colorBT;
+        box-shadow:  0 0 10px rgba(0, 0, 0, 0.8);
+        font-size: 2vh;
+        animation: show_anim .3s ease-in;
+        #weapon_title {
+            font-weight: bold;
+        }
+    }
+    .weapon_holster {
+        margin-bottom: 2vh;
+    }
+}
+.weapon_column_lock {
+    .weapon_holster {
+        scale: (0.85);
+        filter: brightness(40%);
+        transition: all .3s ease-in-out;
+    }
+    .WEP_btn {
+        pointer-events: none;
+    }
+}
+
+.WEP_btn {
+    // position: absolute;
+    width: 7vh;
+    height: 7vh;
+    // margin-right: .5vh;
+    opacity: 1;
+    pointer-events: auto;
+    transition: all .2s ease-out;
+    cursor: pointer;
+    .WEP_num {
+        position: relative;
+        top: 2.5vh;
+        left: 2.5vh;
+        width: 2vh;
+        height: 2vh;
+        pointer-events: none;
+        border-radius: 1vh;
+        background-color: $colorBT;
+        box-shadow:  0 0 10px rgba(0, 0, 0, 0.8);
+        color: $colorW;
+        font-size: 1.5vh;
+    }
+}
+.WEP_loaded {
+    width: 6vh;
+    height: 6vh;
+    border: $colorG solid 1px;
+
+    // margin-right: .5vh;
+    // opacity: .5;
+    pointer-events: auto;
+    transition: all .2s ease-out;
+    cursor: pointer;
+
+}
+@keyframes weapon_choice_anim {
+    0% {
+        background: conic-gradient($colorG 0deg 5deg, transparent 5deg 360deg);
+        scale: 0.5;
+    }
+    5% {
+        background: conic-gradient($colorG 0deg 15deg, transparent 15deg 360deg);
+    }
+    10% {
+        background: conic-gradient($colorG 0deg 25deg, transparent 25deg 360deg);
+    }
+    15% {
+        background: conic-gradient($colorG 0deg 35deg, transparent 35deg 360deg);
+    }
+    20% {
+        background: conic-gradient($colorG 0deg 45deg, transparent 45deg 360deg);
+    }
+    25% {
+        background: conic-gradient($colorG 0deg 55deg, transparent 55deg 360deg);
+    }
+    30% {
+        background: conic-gradient($colorG 0deg 65deg, transparent 65deg 360deg);
+    }
+    35% {
+        background: conic-gradient($colorG 0deg 75deg, transparent 75deg 360deg);
+    }
+    40% {
+        background: conic-gradient($colorG 0deg 85deg, transparent 85deg 360deg);
+    }
+    45% {
+        background: conic-gradient($colorG 0deg 95deg, transparent 95deg 360deg);
+    }
+    50% {
+        background: conic-gradient($colorG 0deg 105deg, transparent 105deg 360deg);
+    }
+    55% {
+        background: conic-gradient($colorG 0deg 115deg, transparent 115deg 360deg);
+    }
+    60% {
+        background: conic-gradient($colorG 0deg 125deg, transparent 125deg 360deg);
+    }
+    65% {
+        background: conic-gradient($colorG 0deg 135deg, transparent 135deg 360deg);
+    }
+    68% {
+        background: conic-gradient($colorG 0deg 145deg, transparent 145deg 360deg);
+    }
+    70% {
+        background: conic-gradient($colorG 0deg 155deg, transparent 155deg 360deg);
+    }
+    72% {
+        background: conic-gradient($colorG 0deg 165deg, transparent 165deg 360deg);
+    }
+    74% {
+        background: conic-gradient($colorG 0deg 175deg, transparent 175deg 360deg);
+    }
+    76% {
+        background: conic-gradient($colorG 0deg 185deg, transparent 185deg 360deg);
+    }
+    78% {
+        background: conic-gradient($colorG 0deg 195deg, transparent 195deg 360deg);
+    }
+    80% {
+        background: conic-gradient($colorG 0deg 210deg, transparent 210deg 360deg);
+    }
+    82% {
+        background: conic-gradient($colorG 0deg 225deg, transparent 225deg 360deg);
+    }
+    84% {
+        background: conic-gradient($colorG 0deg 240deg, transparent 240deg 360deg);
+    }
+    86% {
+        background: conic-gradient($colorG 0deg 255deg, transparent 255deg 360deg);
+    }
+    88% {
+        background: conic-gradient($colorG 0deg 270deg, transparent 270deg 360deg);
+    }
+    90% {
+        background: conic-gradient($colorG 0deg 285deg, transparent 285deg 360deg);
+        scale: 1.1;
+    }
+    92% {
+        background: conic-gradient($colorG 0deg 300deg, transparent 300deg 360deg);
+    }
+    94% {
+        background: conic-gradient($colorG 0deg 315deg, transparent 315deg 360deg);
+    }
+    96% {
+        background: conic-gradient($colorG 0deg 330deg, transparent 330deg 360deg);
+    }
+    98% {
+        background: conic-gradient($colorG 0deg 345deg, transparent 345deg 360deg);
+    }
+    100% {
+        background: conic-gradient($colorG 0deg 360deg, transparent 360deg 360deg);
+        scale: 1;
+    }
+}
+#enemy_move_div{
+    position: absolute;
+    top: 10vh;
+    // width: 4vh;
+    // height: 4vh;
+    // border: $colorWT solid 1px;   
+    #enemy_now_move {
+        width: 4vh;
+        height: 4vh;
+        margin: 0 2vh;
+        background-color: $colorBT;
+        box-shadow: 0 0 1vh $colorB;
+        // background-image: url("/src/assets/img/enemy/move_attack.png");
+    }
+    #enemy_pre_move {
+        width: 3vh;
+        height: 3vh;
+        background-color: $colorBT;
+        box-shadow: 0 0 1vh $colorB;
+        opacity: 0.4;
+    }
+    #enemy_next_move {
+        width: 3vh;
+        height: 3vh;
+        background-color: $colorBT;
+        box-shadow: 0 0 1vh $colorB;
+        opacity: 0.1;
+    }
+}
+#enemy_heart_div{
+    position: absolute;
+    margin-bottom: 5vh;
+    // border: $colorWT solid 1px;
+    #enemy_heart_label{
+        position: absolute;
+        left: 0vh;
+        bottom: .5vh;
+        width: 2vh;
+        height: 2vh;
+        color: $colorW;
+        border-radius: 5vh;
+        box-shadow: 0 0 2vh rgba(255, 255, 255, .3);
+        background-color: rgba(255, 255, 255, .1);
+    } 
+    #enemy_heart_bar{
+        width: 24vh;
+        height: .5vh; 
+        background-color: rgb(54, 22, 22);
+        box-shadow: 0 0 1vh $colorR;
+        // opacity: 0.2;
+        filter: blur(.2vh);
+        border-radius: 5vh;
+        justify-content: start;
+        #enemy_heart_remain{
+            width: 50%;
+            height: .8vh; 
+            background-color: $colorR;
+            filter: blur(.5vh);
+        } 
+    } 
+}
+#enemy_harm_div{
+    position: absolute;
+    top: 40vh;
+}
+#user_harm_div{
+    position: absolute;
+    bottom: 4vh;
+    left: 6vh;
+    z-index: 2;
+}
+.harm_note {
+    width: 5vh;
+    height: 5vh;
+    color: $colorR;
+    font-weight: bold;
+    animation: enemy_harm_note .5s ease-in-out;
+    // -webkit-filter: drop-shadow(2px 2px 0 white)
+    //                     drop-shadow(-2px 2px 0 white)
+    //                     drop-shadow(2px -2px 0 white)
+    //                     drop-shadow(-2px -2px 0 white);
+    
+    filter: drop-shadow(1px 1px 0 $colorWT)
+            drop-shadow(-1px 1px 0 $colorWT)
+            drop-shadow(1px -1px 0 $colorWT)
+            drop-shadow(-1px -1px 0 $colorWT);
+    // background-color: $colorG;
+}
+@keyframes enemy_harm_note {
+    50% { transform: translateY(-45%);}
+    98% { transform: translateY(8%);}
+    100% { transform: translateY(0%);}
+}
+
+.move_attack{ background-image: url("/src/assets/img/enemy/move_attack.png");}
+.move_defense{ background-image: url("/src/assets/img/enemy/move_defense.png");}
+.move_concentrate{ background-image: url("/src/assets/img/enemy/move_concentrate.png");}
+.move_onslaught{ background-image: url("/src/assets/img/enemy/move_onslaught.png");}
+
+@keyframes twice_anim { 
+    from { background-size: 200% 100%; }
+    to { 
+        background-position-x: 200%; 
+        background-size: 200% 100%;}}
+@keyframes third_anim { 
+    from { background-size: 300% 100%; }
+    to { 
+        background-position-x: 300%; 
+        background-size: 300% 100%;}}
+@keyframes fourth_anim { 
+    from { background-size: 400% 100%; }
+    to { 
+        background-position-x: 400%; 
+        background-size: 400% 100%;}}
+
+.enemy-1{ background-image: url("/src/assets/img/enemy/1-1.png");
+    animation: third_anim 1.2s steps(3) infinite;
+};
+.enemy-1-attack{ scale:(1.2); background-image: url("/src/assets/img/enemy/1-2.png");}
+.enemy-1-onslaught{ scale:(1.2); background-image: url("/src/assets/img/enemy/1-3.png");}
+
+.enemy-2{ background-image: url("/src/assets/img/enemy/1-1.png");}
+.enemy-3{ background-image: url("/src/assets/img/enemy/1-1.png");}
+.enemy-4{ background-image: url("/src/assets/img/enemy/1-1.png");}
+.enemy-5{ background-image: url("/src/assets/img/enemy/1-1.png");}
+.enemy-6{ background-image: url("/src/assets/img/enemy/1-1.png");}
+.enemy-7{ background-image: url("/src/assets/img/enemy/1-1.png");}
+.enemy-8{ background-image: url("/src/assets/img/enemy/1-1.png");}
+.enemy-9{ background-image: url("/src/assets/img/enemy/1-1.png");}
+.enemy-10{ background-image: url("/src/assets/img/enemy/1-1.png");}
+
+.s1-dream-enemy{ background-image: url("/src/assets/img/enemy/dream.png"); 
+    background-size: 200% 100%;
+    animation: s1-dream-enemy .3s steps(2) infinite;
+}
+@keyframes s1-dream-enemy { 
+    50% {
+        transform: translate(0px, 2px);
+    }
+    to { background-position-x: -200%; }
+}
+.enemy_hurt {
+    // scale: (.9);
+    filter: brightness(.5);
+    opacity: 0.3;
+    animation: show_anim .2s infinite;
+}
+
+
+@keyframes handIn {
+    0% {
+        transform: translate(10px);
+    }
+    100% {
+        transform: translate(0);
+    }
+};
+@keyframes start_anim { to { background-position-x: 600%; }}
+#flash {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black; /* 黑色遮罩 */
+    
+    -webkit-mask-image: radial-gradient(
+        circle,rgba(255, 255, 255, 0.7) 250px, 
+        rgba(255, 255, 255, 0.9) 350px);
+    mask-image: radial-gradient(
+        circle, rgba(255, 255, 255, 0.2) 100px, 
+        rgba(255, 255, 255, 0.6) 150px, 
+        rgba(255, 255, 255, 0.7) 180px);
+    mask-position: -2px 2px;
+    animation: flashShake 2s infinite;
+    @keyframes flashShake {
+        50% { opacity: 0.95;}
+    }
+}
+
+.fade_out_anim {
+    opacity: 0.3;
+    transition: opacity .2s linear;
+}
+.fade_in_anim {
+    opacity: 1;
+    transition: opacity .5s ease-in-out;
+}
+@keyframes flash_start { 100% { opacity: 0; }}
+#attack_div {
+    position: absolute;
+    // width: 250px;
+    // height: 250px;
+    margin-bottom: 120px;
+    // border: 1px solid gray;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1vh;
+}
+// 整個東西
+.attack_slot {
+    width: 45px;
+    height: 45px;
+    pointer-events: auto;
+    // border: 1px solid gray;
+    cursor: pointer;
+    z-index: 10;
+    &:hover {
+        scale: 0.9;
+    }
+}
+//邊框
+.attack_circle {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: attack_ready 3s linear;
+}
+// 中心
+.inner_circle {
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    box-shadow:  0 0 5px black;   /*內圈光暈*/
+    background-color: black;
+    &:active {
+        background-color: red;
+    }
+    // border: white solid 5px;
+}
+@keyframes slot_click_anim { 
+    10% { transform: scale(1.5);}
+    100% { opacity: 0; transform: scale(0.8);} }
+.slot_click_anim {
+    animation: slot_click_anim .8s forwards;
+    .inner_circle {
+        background-color: gray;
+    }
+}
+@keyframes attack_ready {
+    0% {
+        background: conic-gradient(red 0deg 5deg, transparent 5deg 360deg);
+        scale: 0.5;
+    }
+    5% {
+        background: conic-gradient(red 0deg 15deg, transparent 15deg 360deg);
+    }
+    10% {
+        background: conic-gradient(red 0deg 25deg, transparent 25deg 360deg);
+    }
+    15% {
+        background: conic-gradient(red 0deg 35deg, transparent 35deg 360deg);
+    }
+    20% {
+        background: conic-gradient(red 0deg 45deg, transparent 45deg 360deg);
+    }
+    25% {
+        background: conic-gradient(red 0deg 55deg, transparent 55deg 360deg);
+    }
+    30% {
+        background: conic-gradient(red 0deg 65deg, transparent 65deg 360deg);
+    }
+    35% {
+        background: conic-gradient(red 0deg 75deg, transparent 75deg 360deg);
+    }
+    40% {
+        background: conic-gradient(red 0deg 85deg, transparent 85deg 360deg);
+    }
+    45% {
+        background: conic-gradient(red 0deg 95deg, transparent 95deg 360deg);
+    }
+    50% {
+        background: conic-gradient(red 0deg 105deg, transparent 105deg 360deg);
+    }
+    55% {
+        background: conic-gradient(red 0deg 115deg, transparent 115deg 360deg);
+    }
+    60% {
+        background: conic-gradient(red 0deg 125deg, transparent 125deg 360deg);
+    }
+    65% {
+        background: conic-gradient(red 0deg 135deg, transparent 135deg 360deg);
+    }
+    68% {
+        background: conic-gradient(red 0deg 145deg, transparent 145deg 360deg);
+    }
+    70% {
+        background: conic-gradient(red 0deg 155deg, transparent 155deg 360deg);
+    }
+    72% {
+        background: conic-gradient(red 0deg 165deg, transparent 165deg 360deg);
+    }
+    74% {
+        background: conic-gradient(red 0deg 175deg, transparent 175deg 360deg);
+    }
+    76% {
+        background: conic-gradient(red 0deg 185deg, transparent 185deg 360deg);
+    }
+    78% {
+        background: conic-gradient(red 0deg 195deg, transparent 195deg 360deg);
+    }
+    80% {
+        background: conic-gradient(red 0deg 210deg, transparent 210deg 360deg);
+    }
+    82% {
+        background: conic-gradient(red 0deg 225deg, transparent 225deg 360deg);
+    }
+    84% {
+        background: conic-gradient(red 0deg 240deg, transparent 240deg 360deg);
+    }
+    86% {
+        background: conic-gradient(red 0deg 255deg, transparent 255deg 360deg);
+    }
+    88% {
+        background: conic-gradient(red 0deg 270deg, transparent 270deg 360deg);
+    }
+    90% {
+        background: conic-gradient(red 0deg 285deg, transparent 285deg 360deg);
+        scale: 1.1;
+    }
+    92% {
+        background: conic-gradient(red 0deg 300deg, transparent 300deg 360deg);
+    }
+    94% {
+        background: conic-gradient(red 0deg 315deg, transparent 315deg 360deg);
+    }
+    96% {
+        background: conic-gradient(red 0deg 330deg, transparent 330deg 360deg);
+    }
+    98% {
+        background: conic-gradient(red 0deg 345deg, transparent 345deg 360deg);
+    }
+    100% {
+        background: conic-gradient(red 0deg 360deg, transparent 360deg 360deg);
+        scale: 1;
+    }
+}
