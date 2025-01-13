@@ -76,11 +76,6 @@ function loadScene() {
         import('./controller')
 
     ]).then(async ([sceneModule, controllerModule]) => {
-        // const { 
-        //     s_data, s_lines, s_init,
-        //     s_mechanic_line, s_hospital_line, 
-        //     s_corpse_line, s_landscape_line, 
-        // } = sceneModule;
 
         // 確保數據初始化完成
         await sceneModule.s_init();
@@ -98,9 +93,9 @@ function loadScene() {
         user.map = sceneModule.mapData;
         user.scene_arr = sceneModule.s_data;
         user.line_arr = sceneModule.s_lines;
-        user.mechanic_line = sceneModule.s_mechanic_line;
+        user.npc_line = sceneModule.s_npc_line;
+        user.harvey_line = sceneModule.s_harvey_line;
         user.hospital_line = sceneModule.s_hospital_line;
-        user.corpse_line = sceneModule.s_corpse_line;
         user.landscape_line = sceneModule.s_landscape_line;
 
         user.golbal_arr = golbal_arr;

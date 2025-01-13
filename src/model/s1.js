@@ -26,7 +26,7 @@ const mapData = [
     ["x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000","x_0000"]
   ];
 
-let s_data, s_lines, s_mechanic_line, s_hospital_line, s_corpse_line, s_landscape_line;
+let s_data, s_lines, s_npc_line, s_harvey_line, s_hospital_line, s_landscape_line;
 
 import { user_language } from "/src/model/setting.js";
 
@@ -282,7 +282,6 @@ function render_map_wall(rpCell, x, y, cols, rows) {
             rand_map_arr[`${y},${x}`].bg.E = `map_wall_${value}`;
         }
     });
-    // console.log(rand_map_arr[`${y},${x}`].bg, bgKey)
 };
 // 特定場景
 function render_special_scene(cell, row, col, rand_map_arr) {
@@ -300,6 +299,11 @@ function render_special_scene(cell, row, col, rand_map_arr) {
         rand_map_arr[`${row},${col}`].bg.E = `map_wall_0`;
         rand_map_arr[`${row},${col}`].bg.S = `map_wall_0`;
         rand_map_arr[`${row},${col}`].bg.W = `map_wall_0`;
+
+        rand_map_arr[`${row},${col}`].N = [
+            { x: 25, y: 25, w: 20, h: 10, type: "npc", is: 0, name: "Mechanic", lyric: "mechanic" },
+            { x: 38, y: 40, w: 6, h: 6, type: "unique", is: "sharebox", bg:"share_box" }
+        ];
     } else if (cell.includes("LS2")) {
         rand_map_arr[`${row},${col}`].bg.N = `s1-mechanic-2`;
         rand_map_arr[`${row},${col}`].bg.E = `map_wall_0`;
@@ -307,8 +311,12 @@ function render_special_scene(cell, row, col, rand_map_arr) {
         rand_map_arr[`${row},${col}`].bg.W = `map_wall_0`;
         
         rand_map_arr[`${row},${col}`].N = [
-            { x: 25, y: 25, w: 20, h: 10, type: "npc", is: 0, name: "Mechanic", lyric: "mechanic" },
-            { x: 38, y: 40, w: 6, h: 6, type: "unique", is: "sharebox", bg:"share_box" }
+            // { x: 38, y: 40, w: 6, h: 6, type: "unique", is: "sharebox", bg:"share_box" }
+            { x: 25, y: 25, w: 20, h: 10, type: "npc", is: "harvey", name: "???", lyric: "npc", change: [
+                { x: 25, y: 25, w: 20, h: 10, type: "unique", is: "shop", who: "harvey" },
+                { x: 38, y: 40, w: 6, h: 6, type: "npc", is: "heart", name: "harvey", lyric: "harvey" },
+                { x: 20, y: 20, w: 16, h: 6, type: "npc", is: "mechanic", name: "harvey", lyric: "harvey" }
+            ] },
         ];
     }
 };
@@ -337,12 +345,14 @@ export const s_init = async () => {
     }
 
     s_lines = lines_JSON.s_main_line;
-    s_mechanic_line = lines_JSON.s_mechanic_line;
+    s_harvey_line = lines_JSON.s_harvey_line;
     s_hospital_line = lines_JSON.s_hospital_line;
-    s_corpse_line = lines_JSON.s_corpse_line;
+    s_npc_line = lines_JSON.s_npc_line;
     s_landscape_line = lines_JSON.s_landscape_line;
     s_data = {
-        0:{ type: "line", bg: "", is:`${start_locat.x},${start_locat.y}`},
+        0:{ type: "line", bg: "", is:`${start_locat.x},${
+            
+            start_locat.y}`},
         ...rand_map_arr,
         dream_start:{ type: "line", bg: "s1-dream", is:"dream_choice"},
         dream_choice:{ type: "view", bg: "s1-dream-choice", ux: [
@@ -368,8 +378,8 @@ export {
     mapData,
     s_data, 
     s_lines, 
-    s_mechanic_line, 
+    s_harvey_line, 
     s_hospital_line, 
-    s_corpse_line, 
+    s_npc_line, 
     s_landscape_line,
 }

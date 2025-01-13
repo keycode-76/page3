@@ -2,30 +2,9 @@
 // import { SD_1, SD_2, SD_3, SD_4, SD_5, SD_6, SD_7, SD_8, SD_9,
 //     MC_2 } from "./sound";
 
-// 極致設計
-// 少即是多
-// 增加一倍或是減半
-// 將核心玩法或參數調到極致 來測試遊戲
-
-// 負反饋 (動腦 壓力 目的:挑戰成功的快感)
-// 死亡懲罰 物品掉一半
-// 孤獨與迫切逃離的感覺
-
-// 敵人攻擊模式 (動腦 複雜 目的:戲耍對手的快感)
-// 可以看到敵人下一回合動作
-// 將軍對決 固定攻擊模式 比如砍了再往前走 走了再砍
-// 敵人目前只有攻擊球 
-// 可以在某個回合有自爆球
-// 絕對攻擊
-
-// 正反饋 (蒐集 準備 目的:自身實力增長的爽感 安心感)
-// 局外成長系統
-// 血量遞增 攻擊防禦能力加成
-// 金幣攜帶
-// 復活能力
-// 血瓶上限
-// 基地建設
-
+// 收東西 跟油箱結合
+// 理智血量等回答
+// map
 export {
     user, next_scene_btn,
     new_scene, new_line,
@@ -42,9 +21,9 @@ let user = {
     map: [],
     scene_arr: {}, //整個劇情資料庫
     line_arr: [],
-    mechanic_line: [],
+    npc_line: [],
+    harvey_line: [],
     hospital_line: [],
-    corpse_line: [],
 
     last_scene_index: 0, // 上個畫面指數
     line_id: 0, // 一段話id
@@ -57,17 +36,16 @@ let user = {
     now_click_data: {}, // 物品資料
 
     heart: 20, // 血量
-    sanity: 2, // 散質
+    sanity: 20, // 散質
     heart_limit: 30, // 血量上限
-    sanity_limit: 2, // 理智上限
+    sanity_limit: 20, // 理智上限
 
     money: 20, // 玩家錢包
     bag_space: 10, // 包包容量
     inventory_space: 20, // 儲物箱
     trust: {
         "base":300,
-        "mechanic":0,
-        "cook":0,
+        "harvey":0,
         "painter":0,
     },
     bag:[
@@ -107,7 +85,6 @@ let user = {
 
 import items_data from '/src/data/items.json';
 import { user_language, language_array } from "/src/model/setting.js";
-// 要放進JSON
 
 // 基地
 const screen = document.querySelector("#screen");
@@ -132,7 +109,7 @@ const lines_name = createDiv("lines_name");
 const lines_text = createDiv("lines_text");
 const lines_btn = createDiv("lines_btn");
 const lines_pass_btn = createDiv("lines_pass_btn");
-let now_trader; // 商人 NPC enemy boss 名子
+let now_trader = ""; // 商人 NPC enemy boss 名子
 let passTimer; // 跳過計時器
 
 // 地圖
@@ -239,7 +216,6 @@ album_div.append(album_title, album_inventory);
 
 // 物品資訊
 const object_div = createDiv("object_div");
-
 const object_left_div = createDiv("object_left_div");
 const object_top_area = createDiv("object_top_area");
 const object_upgrade_btn = createDiv("object_upgrade_btn");
@@ -255,14 +231,16 @@ const object_num_sub = createDiv("object_num_sub");
 const object_num_text = createDiv("object_num_text");
 object_counter.append(object_num_sub, object_num_text, object_num_add);
 
-const object_buy_btn= createDiv("object_buy_btn", "object_btns");
+const object_buy_btn = createDiv("object_buy_btn", "object_btns");
 const object_sell_btn = createDiv("object_sell_btn", "object_btns");
 const object_take_btn = createDiv("object_take_btn", "object_btns");
-
 const object_delet_btn = createDiv("object_delet_btn", "object_btns");
 const object_use_btn = createDiv("object_use_btn", "object_btns");
 const object_give_btn = createDiv("object_give_btn", "object_btns");
-const object_album_btn = createDiv("object_album_btn");
+
+// 相簿
+const object_album_img = createDiv("object_album_img");
+const object_ask_btn = createDiv("object_ask_btn", "object_btns");
 
 // 物品計數器
 let obj_num_data;
@@ -288,7 +266,6 @@ const craftable_list = {
         2:[{name:"Raw_meat", quantity:2}, {name:"Bone_piece", quantity:1}]
     }, 
 };
-
 // 商店數據 JSON
 const shop_list = {
     "Flint_stone": 3, 
@@ -367,11 +344,13 @@ function load_system_text() {
     object_use_btn.textContent = arr.object_use_btn;
     object_delet_btn.textContent = arr.object_delet_btn;
     object_give_btn.textContent = arr.object_give_btn;
+    object_ask_btn.textContent = arr.object_ask_btn;
 };
 load_system_text();
 
 // MAIN SYSTEM -------------------------------------------------------
 render_start_data();
+
 const new_scene = (id, other) => {
 
     // 初始化
@@ -379,6 +358,7 @@ const new_scene = (id, other) => {
     scene_ux.innerHTML = "";
     screen_ui.innerHTML = "";
     screen_cover.innerHTML = "";
+    now_trader = "";
 
     is_efx_active = false;
 
@@ -389,7 +369,7 @@ const new_scene = (id, other) => {
     // 提供支線數據
         user.now_scene_data = other[id];
     }
-
+    // console.log(user.now_scene_data)
     // 沒接收到東西
     if (!user.now_scene_data) return; 
     // 背景渲染
@@ -409,7 +389,6 @@ const new_scene = (id, other) => {
         // 指定 特殊位置
         user.sceneIndex = user.now_scene_data.is;
     }
-
     // 特效渲染
     if (user.now_scene_data.efx) {
         switch (user.now_scene_data.efx) {
@@ -481,6 +460,7 @@ const new_scene = (id, other) => {
             break;
     }
 };
+
 const new_line = () => {
     //初始化
     screen_ui.innerHTML = ""; 
@@ -612,9 +592,6 @@ const render_ux = (direct) => {
         };
         // 有名子的對象
         if (ux_arr.type === "enemy" || ux_arr.type === "npc") now_trader = ux_arr.name;
-        // if (ux_arr.type === "enemy") {
-        //     trigger.className = "ux_btns enemy_start";
-        // }
         // 有圖的ux
         if (ux_arr.bg && ux_arr.type !== "merch") { trigger.classList.add(ux_arr.bg) }
         // 點擊
@@ -633,7 +610,6 @@ const click_ux = (event, ux_arr, index) => {
     
     // 按鈕禁用
     ux_button_open(false);
-
     switch (ux_arr.type) {
         // 交易所
         case "unique":
@@ -661,7 +637,6 @@ const click_ux = (event, ux_arr, index) => {
         case "next":
             if (ux_arr.wall) { user.wall = ux_arr.wall; };
             user.sceneIndex = ux_arr.is;
-            // new_scene!!!(ux_arr.is);
             render_efx_fade_out(ux_arr.is);
             break;
         // 物件
@@ -686,16 +661,20 @@ const click_ux = (event, ux_arr, index) => {
             break;
         // 對話
         case "npc":
-
             user.line_length = Object.keys(user[`${ux_arr.lyric}_line`][ux_arr.is]).length;
             user.line_rp = user[`${ux_arr.lyric}_line`][ux_arr.is];
-            new_line(user.line_length,);  // 台詞機
+            new_line(user.line_length);  // 台詞機
 
+            // 給予東西
             if (ux_arr.reward) {
                 rp_reward_ux_arr = ux_arr.reward;
                 rp_reward_index = index;
                 delete ux_arr.reward; // 刪掉獎勵
                 // render_reward(ux_arr.reward, index);
+            }
+            // 改變
+            if (ux_arr.change) {
+                user.scene_arr[user.sceneIndex][NWSE_compass] = ux_arr.change;
             }
             break;
         case "enemy":
@@ -706,9 +685,10 @@ const click_ux = (event, ux_arr, index) => {
             render_battle_init();
             render_player_init();
             // 敵人動畫
-            scene_ux.children[0].classList.remove("enemy_start");
-            scene_ux.children[0].classList.add("enemy_anim");
-            scene_ux.children[0].style.pointerEvents = "none";
+            // scene_ux.children[0].classList.remove("enemy_start");
+            // scene_ux.children[0].classList.add("enemy_anim");
+            // scene_ux.children[0].style.pointerEvents = "none";
+            scene_ux.children[0].style.display = "none";
             rp_selected_ux = event;
             break;
         case "choice":
@@ -807,6 +787,7 @@ const render_blood_animation = (type) => {
         { once: true }
     );
 };
+
 // 手電筒特效
 const render_efx_dark = () => {
     screen_cover.innerHTML = "";
@@ -1345,6 +1326,7 @@ const render_change = (num, order) => {
             break;
     }
 };
+
 // 跳出文字
 const render_popUp = (text) => {
     screen.appendChild(pop_note);
@@ -1700,7 +1682,7 @@ function render_enemy_move() {
         case "move_attack" :
             onslaught_bar += 1;
             battle_enemy_img.className = `${enemy_data["bg"]}-attack`;
-            console.log(battle_enemy_img.className)
+            // console.log(battle_enemy_img.className)
             // 敵人回到準備姿勢
             player_turn_timer = setTimeout(() => {
                 battle_enemy_img.className = enemy_data["bg"];
@@ -1808,28 +1790,14 @@ const render_reward = (rewards, index) => {
                 
                 // 獎勵不可操作
                 render_object_detail(reward);
-                object_right_div.innerHTML = "";
+                object_left_div.innerHTML = "";
+                // object_right_div.innerHTML = "";
+                object_left_div.appendChild(object_title);
+                // object_right_div.appendChild(object_label);
                 
-                // if (Object.keys(user.bag).length >= user.bag_space) {
-                //     render_popUp("Bag is full");
-                //     return;
-                // }
-
-                // // 加到背包
-                // if (user.bag.hasOwnProperty(reward)) {
-                //     user.bag[reward] += rewards[reward];
-            
-                // } else {
-                //     user.bag[reward] = rewards[reward];
-                // };
-
                 render_bag_slot();
 
                 event.target.style.display = "none";
-            
-                // render_popUp(`${object_title.textContent} added to bag`);
-
-                // if (user.now_scene_data.type === "line") render_efx_fade_out(user.sceneIndex);
             });
         }
     });
@@ -1837,11 +1805,11 @@ const render_reward = (rewards, index) => {
 // 理智
 state_efx.addEventListener("animationend", () => {
     screen_cover.removeChild(state_efx);
-if (state_efx.className === "sanity_efx") {
-    render_efx_fade_out("dream_start");
-} else if (state_efx.className === "dead_efx") {
-    render_efx_fade_out("dead");
-}
+    if (state_efx.className === "sanity_efx") {
+        render_efx_fade_out("dream_start");
+    } else if (state_efx.className === "dead_efx") {
+        render_efx_fade_out("dead");
+    }
 });
 const render_sanity = () => {
     
@@ -1962,8 +1930,8 @@ const render_object_detail = (data, quantity) => {
 
     // 將視圖素添加到主容器中
     object_div.append(object_left_div, object_right_div);
-    object_left_div.append(object_title, object_label);
-    object_right_div.append(object_trade_div, object_counter);
+    object_left_div.append(object_title, object_trade_div, object_counter);
+    object_right_div.append(object_label);
 
     // 圖片 名稱 解釋
     object_title.textContent = items_data[user_language].title[data];
@@ -2030,65 +1998,6 @@ function object_adder(container, item, spaceLimit) {
     return true;
 }
 
-// 升級系統
-// object_upgrade_btn.addEventListener("click", () => {
-
-//     // 確認是否有 Black ore
-//     if (!user.bag["Black_ore"]) {
-//         render_popUp("You don't have Black ore!");
-//     } else if (!/bullet/.test(SEL_object)) {
-//         render_popUp("Can't be upgrade");
-//     } else {
-//         object_upgrade_btn.innerHTML = "";
-//         // 更新 weapon_power 和 weapon_feature
-//         if (user.weapon_feature[SEL_object]) {
-//             user.weapon_power[SEL_object] += 1;
-//             user.weapon_feature[SEL_object] += 1;
-//             object_upgrade_btn.innerHTML = `power: ${user.weapon_power[SEL_object]}<br>feature: ${user.weapon_feature[SEL_object]}`;
-//         } else {
-//             user.weapon_power[SEL_object] += 1;
-//             object_upgrade_btn.innerHTML = `power: ${user.weapon_power[SEL_object]}`;
-//         }
-
-//         // 減少 Black ore 並檢查是否為零
-//         user.bag["Black_ore"] -= 1;
-//         if (user.bag["Black_ore"] <= 0) {
-//             delete user.bag["Black_ore"]; // 移除 Black_ore
-//         }
-//         render_popUp(`${SEL_object} upgrade`);
-//         render_bag_init();
-//         object_div.style.display = "flex";
-//         // 改變按鈕顏色
-//         object_upgrade_btn.style.color = "red";
-//         setTimeout(() => {
-//             object_upgrade_btn.style.color = "gray";
-//         }, 2000);
-//     }
-// });
-
-
-// 合成系統
-// 合成數據 JSON
-// const craftable_list = {
-//     "Meat_soup":{
-//         1:["Raw_meat", "Raw_meat", "Raw_meat"], 
-//         2:["Raw_meat"], 
-//         3:["Raw_meat", "Raw_meat"]},
-//     "Offal_soup":{
-//         1:["Raw_meat", "Raw_meat", "Bloody_heart"], 
-//         2:["Raw_meat", "Raw_meat", "An_eyeball"]},
-// };
-// const craftable_list = {
-//     "Meat_soup":{
-//         1:[{name:"Raw_meat", quantity:3}], 
-//         2:[{name:"Raw_meat", quantity:1}], 
-//         3:[{name:"Raw_meat", quantity:2}]
-//     }, 
-//     "Offal_soup":{
-//         1:[{name:"Raw_meat", quantity:2}, {name:"Fur_pelt", quantity:1}], 
-//         2:[{name:"Raw_meat", quantity:2}, {name:"Bone_piece", quantity:1}]
-//     }, 
-// };
 function render_crafting_system() {
     
     render_bag_init();
@@ -2195,7 +2104,7 @@ function craftItem(item, recipeNumber) {
             }
         }
     });
-    console.log(user.bag);
+    // console.log(user.bag);
     
     // 合成物品處理
     const success = object_adder(user.bag, { name: item, quantity: 1 }, user.bag_space);
@@ -2222,7 +2131,6 @@ function render_shop_system() {
     facility_title.textContent = arr[now_trader];
     facility_trust.textContent = `Trust: ${user.trust[now_trader]} +`;
     facility_box.innerHTML = "";
-    // user.now_scene_data mechanic
 
     Object.keys(shop_list).forEach(item => {
         const shop_item = createDiv(0, "item_slot");
@@ -2246,7 +2154,7 @@ function render_shop_system() {
         });
         
     });
-};
+};now_trader = 
 // 購買事件
 object_buy_btn.addEventListener("click", debounce(() => {
     
@@ -2359,8 +2267,6 @@ object_take_btn.addEventListener("click", debounce(() => {
 
 // 郵箱
 function render_sharebox_init() {
-
-    
     render_bag_init();
     sharebox_is_open = true;
     facility_title.textContent = "Share";
@@ -2488,13 +2394,15 @@ function render_bag_slot() {
                     
                     // 是交易的話
                     if (facility_trust.style.display === "flex") {
-
                         able_to_sell = true;
                         object_trade_div.appendChild(object_sell_btn);
                         facility_trust.textContent = `Trust: ${user.trust[now_trader]} + ${price_list[item.name]}`;
+                    } else if (reward_showed === true) {
+                    // 是獎勵
+                        object_trade_div.appendChild(object_delet_btn);
                     } else {
-                    // 非交易
-                        object_trade_div.append(object_use_btn, object_delet_btn);
+                    // 普通狀態
+                        object_trade_div.appendChild(object_use_btn);
                     }
                 }
             });
@@ -2540,7 +2448,7 @@ object_sell_btn.addEventListener("click", debounce(() => {
 
     // 重整數量
     user.trust[now_trader] += (price_list[SEL_object.name] * obj_num_data);
-    console.log(price_list[SEL_object.name], SEL_object.name)
+    // console.log(price_list[SEL_object.name], SEL_object.name)
     facility_trust.textContent = `Trust: ${user.trust[now_trader]}`;
     init_object_number(SEL_object.quantity);
     render_bag_slot(price_list[SEL_object]);
@@ -2549,7 +2457,6 @@ object_sell_btn.addEventListener("click", debounce(() => {
 }, 300));
 // 使用該物品
 object_use_btn.addEventListener("click", () => {
-    
     // 減少物品
     if (SEL_object.quantity > obj_num_data) {
         SEL_object.quantity -= obj_num_data;
@@ -2641,7 +2548,6 @@ function render_album_slot() {
 
         const item_slot = createDiv(0, "item_slot");
 
-        // console.log(user.album[i].name)
         // 如果有物品
         if (user.album[i]) {
             const item = user.album[i];
@@ -2655,15 +2561,37 @@ function render_album_slot() {
                 SEL_object = item;
                 // 初始面板
                 render_object_detail(item.name);
-                object_right_div.innerHTML = "";
-                object_right_div.appendChild(object_album_btn);
-                object_album_btn.className = item.name;
+                object_left_div.innerHTML = "";
+                object_left_div.append(object_title, object_trade_div, object_album_img);
+                object_trade_div.appendChild(object_ask_btn);
+                object_album_img.className = item.name;
             });
         }
         // 停止新增
         album_inventory.appendChild(item_slot);
     }
 };
+// 詢問點擊相簿
+object_ask_btn.addEventListener("click", () => {
+
+    // 關掉相簿
+    object_div.style.display = "none";
+    bag_close_panel.click();
+    switch(now_trader) {
+        case "harvey":
+            render_popUp(`You ask ${now_trader} for the ${object_album_img.className}`);
+            console.log()
+            
+            user.line_length = Object.keys(user[`${now_trader}_line`][object_album_img.className]).length;
+            user.line_rp = user[`${now_trader}_line`][object_album_img.className];
+            // 跑台詞
+            new_line(user.line_length);
+            break;
+        default:
+            render_popUp("nobody response")
+            break;
+    }
+});
 
 // BUTTONS -------------------------------------------------------
 // 對話
@@ -2694,6 +2622,7 @@ lines_pass_btn.addEventListener("touchend", cancelPassTimer);
 lines_pass_btn.addEventListener("touchcancel", cancelPassTimer);
 
 // OTHERS -------------------------------------------------------
+
 const sound_btn = () => {
     // SD_1.currentTime = 0;
     // SD_1.play();
