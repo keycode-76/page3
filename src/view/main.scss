@@ -58,7 +58,7 @@ body {
         top: 0;
         height: 100%;
         width: 100%;
-        background-color: $colorB;
+        background-color: $colorB; 
     }
     #screen_cover {
         position: absolute;
@@ -75,8 +75,6 @@ body {
         justify-content: center;
         align-items: center;
         pointer-events: none;
-        // position: relative;
-        // margin-top: -5vh;
     }
     @keyframes border_anim {
         0% { 
@@ -286,6 +284,47 @@ body {
     0% { opacity: 0.5; }
     40% { opacity: 1; color: $colorW; box-shadow:  0 0 2vh $colorG; background-color: rgba(255, 255, 255, .2) }
 }
+// 轉場特效
+@keyframes handIn {
+    0% {
+        transform: translate(10px);
+    }
+    100% {
+        transform: translate(0);
+    }
+};
+@keyframes start_anim { to { background-position-x: 600%; }}
+#flash {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black; /* 黑色遮罩 */
+    
+    -webkit-mask-image: radial-gradient(
+        circle,rgba(255, 255, 255, 0.7) 250px, 
+        rgba(255, 255, 255, 0.9) 350px);
+    mask-image: radial-gradient(
+        circle, rgba(255, 255, 255, 0.2) 100px, 
+        rgba(255, 255, 255, 0.6) 150px, 
+        rgba(255, 255, 255, 0.7) 180px);
+    mask-position: -2px 2px;
+    animation: flashShake 2s infinite;
+    @keyframes flashShake {
+        50% { opacity: 0.95;}
+    }
+}
+
+.fade_out_anim {
+    opacity: 0.2;
+    transition: opacity .4s linear;
+}
+.fade_in_anim {
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+}
+@keyframes flash_start { 100% { opacity: 0; }}
 // 流血畫面
 #covered_in_blood {
     position: absolute;
@@ -311,6 +350,13 @@ body {
     animation: dead_efx 1s steps(6) forwards;
 };
 @keyframes dead_efx { to { background-position-x: -600%; }}
+.battle_efx {
+    animation: battle_efx 1s ease-in-out;
+};
+@keyframes battle_efx { 
+    50% { background-color: $colorG; }
+    100% { background-color: $colorB; }
+}
 // 理智
 .sanity_efx {
     background-size: 600% 100%;
@@ -712,29 +758,23 @@ body {
             pointer-events: none;
         }
     }
-    #map_full_container {
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-        flex-direction: column;
-        // box-shadow: inset 0 0 1vh $colorG;
-    }
     #map_locat_title {
+        position: absolute;
+        top: 10vh;
         width: 100%;
         color: $colorG;
         padding: 1vh 2vh;
-        font-size: 1.5vh;
-        justify-content: start;
-        // box-shadow: inset 0 0 1vh $colorG;
     }
     #map_locat_info {
+        position: absolute;
+        top: 15vh;
         width: 100%;
-        color: $colorG;
+        color: $colorW;
         padding: 1vh 2vh;
-        justify-content: start;
-        // box-shadow: inset 0 0 1vh $colorG;
        }
     #map_btn_container {
+        position: absolute;
+        bottom: 10vh;
         margin-bottom: 2vh;
     }
     .map_btns {
@@ -774,7 +814,7 @@ body {
     position: absolute;
     cursor: pointer;
     pointer-events: auto;
-    border: 1px solid blue;
+    // border: 1px solid blue;
     left: 0vh;
     top: 72vh;
     width: 6vh;
@@ -788,6 +828,8 @@ body {
     // z-index: 1;
     pointer-events: auto;
     transition: transform 0.5s ease;
+    animation: show_anim 1s ease-in-out;
+
     cursor: pointer;
     filter: drop-shadow(1px 1px 0 $colorWT)
                 drop-shadow(-1px 1px 0 $colorWT)
@@ -1215,16 +1257,16 @@ body {
         top: 7vh;
         width: 38vh;
         height: 38vh;
-    }object_album_
+    }
     #battle_light {
-        margin-bottom: 40vh;
-        width: 25vh;
-        height: 25vh;
+        margin-bottom: 30vh;
+        width: 20vh;
+        height: 20vh;
         background: linear-gradient(217deg, $colorWT, rgba(255, 0, 0, 0) 70.71%), 
-        linear-gradient(127deg, $colorW, rgba(0, 255, 0, 0) 70.71%), 
-        linear-gradient(336deg, $colorWT, rgba(0, 0, 255, 0) 70.71%);
+            linear-gradient(127deg, $colorW, rgba(0, 255, 0, 0) 70.71%), 
+            linear-gradient(336deg, $colorWT, rgba(0, 0, 255, 0) 70.71%);
         border-radius: 50%;
-        filter: blur(8vh);
+        filter: blur(10vh);
         animation: enemy_anim 1.2s infinite ease-out;
     }
     .enemy_faded_out {
@@ -1242,6 +1284,13 @@ body {
 .enemy_anim {
     animation: enemy_anim .5s infinite ease-out;
     transition: all 0.5s ease;
+}
+.enemy_start {
+    animation: enemy_start .5s infinite ease-out;
+    @keyframes enemy_start {
+        0% { opacity: 0; }
+        50% { opacity: 1; }
+    }
 }
 // 標準
 #user_hand {
@@ -1290,7 +1339,6 @@ body {
         pointer-events: none;
     }
 }
-
 .WEP_btn {
     // position: absolute;
     width: 7vh;
@@ -1424,9 +1472,11 @@ body {
         scale: 1;
     }
 }
+// 敵人招數
 #enemy_move_div{
     position: absolute;
-    top: 10vh;
+    top: 8vh;
+    opacity: 0;
     // width: 4vh;
     // height: 4vh;
     // border: $colorWT solid 1px;   
@@ -1542,9 +1592,6 @@ body {
 .enemy-1{ background-image: url("/src/assets/img/enemy/1-1.png");
     animation: third_anim 1.2s steps(3) infinite;
 };
-.enemy-1-attack{ scale:(1.2); background-image: url("/src/assets/img/enemy/1-2.png");}
-.enemy-1-onslaught{ scale:(1.2); background-image: url("/src/assets/img/enemy/1-3.png");}
-
 .enemy-2{ background-image: url("/src/assets/img/enemy/1-1.png");
     animation: third_anim 1.2s steps(3) infinite;
 };
@@ -1574,47 +1621,6 @@ body {
     animation: show_anim .2s infinite;
 }
 
-
-@keyframes handIn {
-    0% {
-        transform: translate(10px);
-    }
-    100% {
-        transform: translate(0);
-    }
-};
-@keyframes start_anim { to { background-position-x: 600%; }}
-#flash {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: black; /* 黑色遮罩 */
-    
-    -webkit-mask-image: radial-gradient(
-        circle,rgba(255, 255, 255, 0.7) 250px, 
-        rgba(255, 255, 255, 0.9) 350px);
-    mask-image: radial-gradient(
-        circle, rgba(255, 255, 255, 0.2) 100px, 
-        rgba(255, 255, 255, 0.6) 150px, 
-        rgba(255, 255, 255, 0.7) 180px);
-    mask-position: -2px 2px;
-    animation: flashShake 2s infinite;
-    @keyframes flashShake {
-        50% { opacity: 0.95;}
-    }
-}
-
-.fade_out_anim {
-    opacity: 0.3;
-    transition: opacity .2s linear;
-}
-.fade_in_anim {
-    opacity: 1;
-    transition: opacity .5s ease-in-out;
-}
-@keyframes flash_start { 100% { opacity: 0; }}
 #attack_div {
     position: absolute;
     // width: 250px;
@@ -1647,18 +1653,18 @@ body {
     animation: attack_ready 3s linear;
 }
 // 中心
-.inner_circle {
-    position: absolute;
-    width: 70%;
-    height: 70%;
-    border-radius: 50%;
-    box-shadow:  0 0 5px black;   /*內圈光暈*/
-    background-color: black;
-    &:active {
-        background-color: red;
-    }
-    // border: white solid 5px;
-}
+// .inner_circle {
+//     position: absolute;
+//     width: 70%;
+//     height: 70%;
+//     border-radius: 50%;
+//     box-shadow:  0 0 5px black;   /*內圈光暈*/
+//     background-color: black;
+//     &:active {
+//         background-color: red;
+//     }
+//     // border: white solid 5px;
+// }
 @keyframes slot_click_anim { 
     10% { transform: scale(1.5);}
     100% { opacity: 0; transform: scale(0.8);} }
@@ -1668,101 +1674,101 @@ body {
         background-color: gray;
     }
 }
-@keyframes attack_ready {
-    0% {
-        background: conic-gradient(red 0deg 5deg, transparent 5deg 360deg);
-        scale: 0.5;
-    }
-    5% {
-        background: conic-gradient(red 0deg 15deg, transparent 15deg 360deg);
-    }
-    10% {
-        background: conic-gradient(red 0deg 25deg, transparent 25deg 360deg);
-    }
-    15% {
-        background: conic-gradient(red 0deg 35deg, transparent 35deg 360deg);
-    }
-    20% {
-        background: conic-gradient(red 0deg 45deg, transparent 45deg 360deg);
-    }
-    25% {
-        background: conic-gradient(red 0deg 55deg, transparent 55deg 360deg);
-    }
-    30% {
-        background: conic-gradient(red 0deg 65deg, transparent 65deg 360deg);
-    }
-    35% {
-        background: conic-gradient(red 0deg 75deg, transparent 75deg 360deg);
-    }
-    40% {
-        background: conic-gradient(red 0deg 85deg, transparent 85deg 360deg);
-    }
-    45% {
-        background: conic-gradient(red 0deg 95deg, transparent 95deg 360deg);
-    }
-    50% {
-        background: conic-gradient(red 0deg 105deg, transparent 105deg 360deg);
-    }
-    55% {
-        background: conic-gradient(red 0deg 115deg, transparent 115deg 360deg);
-    }
-    60% {
-        background: conic-gradient(red 0deg 125deg, transparent 125deg 360deg);
-    }
-    65% {
-        background: conic-gradient(red 0deg 135deg, transparent 135deg 360deg);
-    }
-    68% {
-        background: conic-gradient(red 0deg 145deg, transparent 145deg 360deg);
-    }
-    70% {
-        background: conic-gradient(red 0deg 155deg, transparent 155deg 360deg);
-    }
-    72% {
-        background: conic-gradient(red 0deg 165deg, transparent 165deg 360deg);
-    }
-    74% {
-        background: conic-gradient(red 0deg 175deg, transparent 175deg 360deg);
-    }
-    76% {
-        background: conic-gradient(red 0deg 185deg, transparent 185deg 360deg);
-    }
-    78% {
-        background: conic-gradient(red 0deg 195deg, transparent 195deg 360deg);
-    }
-    80% {
-        background: conic-gradient(red 0deg 210deg, transparent 210deg 360deg);
-    }
-    82% {
-        background: conic-gradient(red 0deg 225deg, transparent 225deg 360deg);
-    }
-    84% {
-        background: conic-gradient(red 0deg 240deg, transparent 240deg 360deg);
-    }
-    86% {
-        background: conic-gradient(red 0deg 255deg, transparent 255deg 360deg);
-    }
-    88% {
-        background: conic-gradient(red 0deg 270deg, transparent 270deg 360deg);
-    }
-    90% {
-        background: conic-gradient(red 0deg 285deg, transparent 285deg 360deg);
-        scale: 1.1;
-    }
-    92% {
-        background: conic-gradient(red 0deg 300deg, transparent 300deg 360deg);
-    }
-    94% {
-        background: conic-gradient(red 0deg 315deg, transparent 315deg 360deg);
-    }
-    96% {
-        background: conic-gradient(red 0deg 330deg, transparent 330deg 360deg);
-    }
-    98% {
-        background: conic-gradient(red 0deg 345deg, transparent 345deg 360deg);
-    }
-    100% {
-        background: conic-gradient(red 0deg 360deg, transparent 360deg 360deg);
-        scale: 1;
-    }
-}
+// @keyframes attack_ready {
+//     0% {
+//         background: conic-gradient(red 0deg 5deg, transparent 5deg 360deg);
+//         scale: 0.5;
+//     }
+//     5% {
+//         background: conic-gradient(red 0deg 15deg, transparent 15deg 360deg);
+//     }
+//     10% {
+//         background: conic-gradient(red 0deg 25deg, transparent 25deg 360deg);
+//     }
+//     15% {
+//         background: conic-gradient(red 0deg 35deg, transparent 35deg 360deg);
+//     }
+//     20% {
+//         background: conic-gradient(red 0deg 45deg, transparent 45deg 360deg);
+//     }
+//     25% {
+//         background: conic-gradient(red 0deg 55deg, transparent 55deg 360deg);
+//     }
+//     30% {
+//         background: conic-gradient(red 0deg 65deg, transparent 65deg 360deg);
+//     }
+//     35% {
+//         background: conic-gradient(red 0deg 75deg, transparent 75deg 360deg);
+//     }
+//     40% {
+//         background: conic-gradient(red 0deg 85deg, transparent 85deg 360deg);
+//     }
+//     45% {
+//         background: conic-gradient(red 0deg 95deg, transparent 95deg 360deg);
+//     }
+//     50% {
+//         background: conic-gradient(red 0deg 105deg, transparent 105deg 360deg);
+//     }
+//     55% {
+//         background: conic-gradient(red 0deg 115deg, transparent 115deg 360deg);
+//     }
+//     60% {
+//         background: conic-gradient(red 0deg 125deg, transparent 125deg 360deg);
+//     }
+//     65% {
+//         background: conic-gradient(red 0deg 135deg, transparent 135deg 360deg);
+//     }
+//     68% {
+//         background: conic-gradient(red 0deg 145deg, transparent 145deg 360deg);
+//     }
+//     70% {
+//         background: conic-gradient(red 0deg 155deg, transparent 155deg 360deg);
+//     }
+//     72% {
+//         background: conic-gradient(red 0deg 165deg, transparent 165deg 360deg);
+//     }
+//     74% {
+//         background: conic-gradient(red 0deg 175deg, transparent 175deg 360deg);
+//     }
+//     76% {
+//         background: conic-gradient(red 0deg 185deg, transparent 185deg 360deg);
+//     }
+//     78% {
+//         background: conic-gradient(red 0deg 195deg, transparent 195deg 360deg);
+//     }
+//     80% {
+//         background: conic-gradient(red 0deg 210deg, transparent 210deg 360deg);
+//     }
+//     82% {
+//         background: conic-gradient(red 0deg 225deg, transparent 225deg 360deg);
+//     }
+//     84% {
+//         background: conic-gradient(red 0deg 240deg, transparent 240deg 360deg);
+//     }
+//     86% {
+//         background: conic-gradient(red 0deg 255deg, transparent 255deg 360deg);
+//     }
+//     88% {
+//         background: conic-gradient(red 0deg 270deg, transparent 270deg 360deg);
+//     }
+//     90% {
+//         background: conic-gradient(red 0deg 285deg, transparent 285deg 360deg);
+//         scale: 1.1;
+//     }
+//     92% {
+//         background: conic-gradient(red 0deg 300deg, transparent 300deg 360deg);
+//     }
+//     94% {
+//         background: conic-gradient(red 0deg 315deg, transparent 315deg 360deg);
+//     }
+//     96% {
+//         background: conic-gradient(red 0deg 330deg, transparent 330deg 360deg);
+//     }
+//     98% {
+//         background: conic-gradient(red 0deg 345deg, transparent 345deg 360deg);
+//     }
+//     100% {
+//         background: conic-gradient(red 0deg 360deg, transparent 360deg 360deg);
+//         scale: 1;
+//     }
+// }

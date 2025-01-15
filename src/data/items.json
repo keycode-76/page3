@@ -22,7 +22,8 @@
             "Meat_soup": "Meat Soup",
 
             "Entrance": "Entrance",
-            "Team_leader": "Team leader"
+            "Team_leader": "Team leader",
+            "Harvey": "Harvey"
         },
         "info": {
             "Flint_stone": "A useful material for starting fires.",
@@ -36,6 +37,7 @@
 
             "Entrance": "Entrance",
             "Team_leader": "Team_leader",
+            "Harvey": "Harvey",
 
             "path":"Path",
             "0":"Base",
@@ -51,7 +53,11 @@
             "Raw_meat": "生肉",
 
             "Extra_pocket": "擴增口袋",
-            "Meat_soup": "肉湯"
+            "Meat_soup": "肉湯",
+            
+            "Entrance": "入口",
+            "Team_leader": "組長",
+            "Harvey": "哈維"
         },
         "info": {
             "Flint_stone": "有用的材料，用來生火",
@@ -65,6 +71,7 @@
 
             "Entrance": "入口",
             "Team_leader": "組長",
+            "Harvey": "哈維",
 
             "path":"通道",
             "0":"基地",

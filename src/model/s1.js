@@ -181,10 +181,10 @@ async function render_randomMap() {
                             name: enemy_data.name,
                             order: enemy_data.order,
                             attack: enemy_data.attack,
-                            x: 13,
-                            y: 33,
-                            w: 25,
-                            h: 25,
+                            x: 18,
+                            y: 38,
+                            w: 18,
+                            h: 18,
                             heart: enemy_data.heart,
                             carapace: enemy_data.carapace,
                             flexibility: enemy_data.flexibility,
@@ -295,29 +295,24 @@ function render_special_scene(cell, row, col, rand_map_arr) {
         rand_map_arr[`${row},${col}`].E = [{ x: 10, y: 55, w: 20, h: 20, type: "unique", is: "inventory" }];
         rand_map_arr[`${row},${col}`].W = [{ x: 10, y: 55, w: 20, h: 20, type: "unique", is: "shop", who: "base" }];
     } else if (cell.includes("LM2")) {
-        rand_map_arr[`${row},${col}`].bg.N = `s1-mechanic-1`;
+        // 初見哈維
+        rand_map_arr[`${row},${col}`].bg.N = `s1-harvey-1`;
         rand_map_arr[`${row},${col}`].bg.E = `map_wall_0`;
         rand_map_arr[`${row},${col}`].bg.S = `map_wall_0`;
         rand_map_arr[`${row},${col}`].bg.W = `map_wall_0`;
 
         rand_map_arr[`${row},${col}`].N = [
-            { x: 25, y: 25, w: 20, h: 10, type: "npc", is: 0, name: "Mechanic", lyric: "mechanic" },
-            { x: 38, y: 40, w: 6, h: 6, type: "unique", is: "sharebox", bg:"share_box" }
+            { x: 25, y: 25, w: 20, h: 10, type: "npc", is: "harvey", name: "???", lyric: "npc", album: "Harvey", change: [
+                { x: 25, y: 25, w: 20, h: 10, type: "unique", is: "shop", who: "harvey" },
+                { x: 10, y: 50, w: 6, h: 6, type: "npc", is: "heart", name: "harvey", lyric: "harvey" },
+                { x: 38, y: 40, w: 6, h: 6, type: "npc", is: "mechanic", name: "harvey", lyric: "harvey" }
+            ] },
         ];
     } else if (cell.includes("LS2")) {
         rand_map_arr[`${row},${col}`].bg.N = `s1-mechanic-2`;
         rand_map_arr[`${row},${col}`].bg.E = `map_wall_0`;
         rand_map_arr[`${row},${col}`].bg.S = `map_aisle_0_1`;
         rand_map_arr[`${row},${col}`].bg.W = `map_wall_0`;
-        
-        rand_map_arr[`${row},${col}`].N = [
-            // { x: 38, y: 40, w: 6, h: 6, type: "unique", is: "sharebox", bg:"share_box" }
-            { x: 25, y: 25, w: 20, h: 10, type: "npc", is: "harvey", name: "???", lyric: "npc", change: [
-                { x: 25, y: 25, w: 20, h: 10, type: "unique", is: "shop", who: "harvey" },
-                { x: 38, y: 40, w: 6, h: 6, type: "npc", is: "heart", name: "harvey", lyric: "harvey" },
-                { x: 20, y: 20, w: 16, h: 6, type: "npc", is: "mechanic", name: "harvey", lyric: "harvey" }
-            ] },
-        ];
     }
 };
 

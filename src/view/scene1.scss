@@ -2,13 +2,13 @@
 
 /* loading first */
 @keyframes image_loader1 {
-    0%  { background-image: url("/src/assets/img/scene/home1.png"); }
-    2%  { background-image: url("/src/assets/img/scene/home2.png"); }
+    0%  { background-image: url("/src/assets/img/enemy/1-2.png"); }
+    2%  { background-image: url("/src/assets/img/enemy/1-2.png"); }
     4%  { background-image: url("/src/assets/img/scene/home3.png"); }
 }
 .image_loader1 {
     animation: image_loader1 3s steps(40) forwards;
-    opacity: 0;
+    // opacity: 0;
 };
 
 @keyframes ten_anim { to { background-position-x: 1000%; }}
@@ -18,7 +18,7 @@
     // background-size: 1000% 100%;
     // animation: ten_anim 1s steps(10) infinite;
 }
-.s1-mechanic-1{ background-image: url("/src/assets/img/scene/mechanic1.png"); }
+.s1-harvey-1{ background-image: url("/src/assets/img/scene/harvey1.png"); }
 .s1-mechanic-2{ background-image: url("/src/assets/img/scene/mechanic2.png"); }
 
 // 地牢隨機陷阱
@@ -33,6 +33,9 @@
 .map_wall_0{ background-image: url("/src/assets/img/wall/0.png"); }
 .map_wall_1{ background-image: url("/src/assets/img/wall/1.png"); }
 .map_wall_2{ background-image: url("/src/assets/img/wall/2.png"); }
+// 怪物
+.enemy-1-attack{ scale:(1.2); background-image: url("/src/assets/img/enemy/1-2.png");}
+.enemy-1-onslaught{ scale:(1.2); background-image: url("/src/assets/img/enemy/1-3.png");}
 
 // 夢境場景
 .s1-dream{ background-image: url("/src/assets/img/scene/dream1.png"); }

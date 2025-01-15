@@ -2,9 +2,11 @@
 // import { SD_1, SD_2, SD_3, SD_4, SD_5, SD_6, SD_7, SD_8, SD_9,
 //     MC_2 } from "./sound";
 
-// 收東西 跟油箱結合
+// 收東西 跟油箱結合 給予核心
 // 理智血量等回答
-// map
+// 廚師 對話背景變化
+// 機器人
+
 export {
     user, next_scene_btn,
     new_scene, new_line,
@@ -141,9 +143,8 @@ const map_down_btn = createDiv("map_down_btn", "map_btns");
 const map_now_btn = createDiv("map_now_btn", "map_btns");
 const map_close_btn = createDiv("map_close_btn", "map_btns");
 map_btn_container.append(map_right_btn, map_left_btn, map_up_btn, map_down_btn, map_now_btn, map_close_btn);
-map_full_container.append(map_btn_container, map_locat_title, map_locat_info, );
 map_compress_div.append(map_compress_N, map_compress_E, map_compress_S, map_compress_W);
-full_map_div.append(full_map_padder, map_compress_div, map_full_container);
+full_map_div.append(map_locat_title, map_locat_info, full_map_padder, map_compress_div, map_btn_container);
 
 // 初始添加
 user_locate_div.append(user_map_compass, mini_map_div);
@@ -485,7 +486,7 @@ const new_line = () => {
 
         // 初始
         user.line_id = 0;
-        ux_button_open(true);
+        btn_switch_generator("scene_ux", true);
 
         // 按鈕生成
         if (user.now_scene_data?.btn && user.now_scene_data.btn[NWSE_compass]) {
@@ -496,7 +497,6 @@ const new_line = () => {
         // 渲染玩家狀態
         render_user_state();
         screen_ui.appendChild(user_locate_div);
-        
         switch (user.now_scene_data.type) {
             // 去下一頁
             case "line": 
@@ -525,7 +525,6 @@ const new_line = () => {
             // 加入ux
             case "room": 
                 if (user.now_scene_data.ux) {
-                        // console.log(NWSE_compass, user.now_scene_data.btn)
                         if (user.now_scene_data.ux) {
                         switch(NWSE_compass) {
                             
@@ -551,12 +550,18 @@ const new_line = () => {
                 }
                 break;
         }
-        // 對話完成獎勵
-        if (rp_reward_ux_arr) {
-            render_reward(rp_reward_ux_arr, rp_reward_index);
+        
+        // 對話完給予獎勵
+        if (rp_selected_ux.reward) {
+            render_reward(rp_selected_ux.reward, rp_reward_index);
             rp_reward_ux_arr = 0;
             render_change("add");
         };
+        if (rp_selected_ux.album) {
+            render_popUp("u got one thing in album");
+            user.album.push({ name: `${rp_selected_ux.album}`},)
+            rp_selected_ux = 0;
+        }
     }
 };
 // UIUX -------------------------------------------------------
@@ -609,7 +614,7 @@ const click_ux = (event, ux_arr, index) => {
     scene_ux.children[0].style.pointerEvents = "auto";
     
     // 按鈕禁用
-    ux_button_open(false);
+    btn_switch_generator("scene_ux", false);
     switch (ux_arr.type) {
         // 交易所
         case "unique":
@@ -661,16 +666,16 @@ const click_ux = (event, ux_arr, index) => {
             break;
         // 對話
         case "npc":
+            // 台詞
             user.line_length = Object.keys(user[`${ux_arr.lyric}_line`][ux_arr.is]).length;
             user.line_rp = user[`${ux_arr.lyric}_line`][ux_arr.is];
-            new_line(user.line_length);  // 台詞機
-
+            new_line(user.line_length);  
             // 給予東西
-            if (ux_arr.reward) {
-                rp_reward_ux_arr = ux_arr.reward;
-                rp_reward_index = index;
-                delete ux_arr.reward; // 刪掉獎勵
-                // render_reward(ux_arr.reward, index);
+            if (ux_arr.album || ux_arr.reward) {
+                rp_selected_ux = ux_arr;
+                // rp_reward_ux_arr = ux_arr.reward;
+                // rp_reward_index = index;
+                // delete ux_arr.reward; // 刪掉獎勵
             }
             // 改變
             if (ux_arr.change) {
@@ -682,13 +687,7 @@ const click_ux = (event, ux_arr, index) => {
             // 繼承獎勵
             enemy_data = ux_arr; 
             // 開使戰鬥
-            render_battle_init();
-            render_player_init();
-            // 敵人動畫
-            // scene_ux.children[0].classList.remove("enemy_start");
-            // scene_ux.children[0].classList.add("enemy_anim");
-            // scene_ux.children[0].style.pointerEvents = "none";
-            scene_ux.children[0].style.display = "none";
+            render_battle_animation("battle");
             rp_selected_ux = event;
             break;
         case "choice":
@@ -696,6 +695,7 @@ const click_ux = (event, ux_arr, index) => {
             break;
     }
 };
+
 // SYSTEMS -------------------------------------------------------
 
 // 遊戲初始化
@@ -732,34 +732,38 @@ const render_efx_fade_out = (way) => {
     is_efx_active = true; 
     screen_bg.className = "fade_out_anim";
     screen_ui.className = "fade_out_anim";
+    btn_switch_generator("screen_ui", false);
 
     // fade_out_anim 動畫的結束
     screen_bg.addEventListener("transitionend", function onFadeOutEnd(e) {
         if (e.propertyName === "opacity" && screen_bg.classList.contains("fade_out_anim")) {
             screen_bg.className = "fade_in_anim";
-            screen_ui.className = "fade_in_anim";
-            new_scene(way); // 進行場景切換
+            screen_ui.className = "";
+            // 進行場景切換
+            new_scene(way); 
+            btn_switch_generator("screen_ui", false);
 
             // 監聽 fade_in_anim 動畫的結束
             screen_bg.addEventListener("transitionend", function onFadeInEnd(e) {
                 if (e.propertyName === "opacity" && screen_bg.classList.contains("fade_in_anim")) {
                     // 移除所有動畫樣式
                     screen_bg.className = "";
-                    screen_ui.className = "";
-                    is_efx_active = false;
+                    btn_switch_generator("screen_ui", true);
+                    item_operation_panel.style.pointerEvents = "none";
 
-                    // 清除監聽器，防止多次觸發
+                    // 防止多次觸發
                     screen_bg.removeEventListener("transitionend", onFadeInEnd);
+                    is_efx_active = false;
                 }
-            });
-            // 清除監聽器，防止多次觸發
+            },  { once: true } );
+            // 防止多次觸發
             screen_bg.removeEventListener("transitionend", onFadeOutEnd);
         }
-    });
+    },  { once: true } );
 };
 
 // 染血特效
-const render_blood_animation = (type) => {
+const render_battle_animation = (type) => {
     // 加入動畫元素
     screen_cover.appendChild(covered_in_blood);
 
@@ -767,6 +771,8 @@ const render_blood_animation = (type) => {
         covered_in_blood.className = Math.random() < 0.5 ? "blood_1" : "blood_2";
     } else if ( type === "dead") {
         covered_in_blood.className = "dead_efx";
+    } else if ( type === "battle") {
+        covered_in_blood.className = "battle_efx";
     }
 
     covered_in_blood.addEventListener("animationend",
@@ -781,7 +787,11 @@ const render_blood_animation = (type) => {
             // 場景切換
             if ( type === "dead") {
                 new_scene("dead");
-            };
+            } else if ( type === "battle") {
+                render_battle_init();
+                render_player_init();
+                scene_ux.children[0].style.display = "none";
+            }
         },
         // 只執行一次
         { once: true }
@@ -898,22 +908,22 @@ function movePlayer() {
 
         // 記錄新地點
         visited_map.push({ x: newX, y: newY });
-        
         // (可選) 若需要時才去重，避免頻繁運算
-        const uniqueMap = [];
-        function removeDuplicates(map) {
-            const seen = new Set();
-            for (const point of map) {
-                const key = `${point.x},${point.y}`;
-                if (!seen.has(key)) {
-                    seen.add(key);
-                    uniqueMap.push(point);
+        // const uniqueMap = [];
+        // function removeDuplicates(map) {
+        //     const seen = new Set();
+        //     for (const point of map) {
+        //         const key = `${point.x},${point.y}`;
+        //         if (!seen.has(key)) {
+        //             seen.add(key);
+        //             uniqueMap.push(point);
                     
-                }
-            }
-            visited_map = uniqueMap;
-        }
-        removeDuplicates(visited_map);
+        //         }
+        //     }
+        //     visited_map = uniqueMap;
+        // }
+        // removeDuplicates(visited_map);
+        visited_map = removeDuplicates(visited_map, ["x", "y"]);
         
         // 根據方向調整對應的 padding 值
         // console.log("padding", mini_padding)
@@ -980,6 +990,7 @@ function movePlayer() {
     }
     initMap();
 };
+
 // 移動大地圖
 function full_map_move(direct) {
     switch (direct) {
@@ -1021,13 +1032,13 @@ mini_map_div.addEventListener("click", () => {
     full_map_padder.appendChild(map_tile_container);
     map_tile_container.style.gridTemplateColumns = `repeat(${user.map[0].length}, 3vh)`;
     full_map_move("now");
-    ux_button_open(false);
+    btn_switch_generator("scene_ux", false);
 });
 // 關閉大地圖
 map_close_btn.addEventListener("click", () => {
     if (screen_ui.contains(full_map_div)) screen_ui.removeChild(full_map_div);
     initMap();
-    ux_button_open(true);
+    btn_switch_generator("scene_ux", true);
 });
 // 旋轉地圖
 function rotate(input) {
@@ -1082,7 +1093,7 @@ const handleRotate = (direction) => {
             chasing = false;
             user.sanity = user.sanity_limit;
             stop_game_timers();
-            render_blood_animation("dead");
+            render_battle_animation("dead");
             return;
         }
     };
@@ -1090,14 +1101,14 @@ const handleRotate = (direction) => {
     rotate(direction);
 };
 // 方向按鈕
-btn_return.addEventListener("click", () => {
+btn_return.addEventListener("click", debounce(() => {
     render_efx_fade_out(user.now_scene_data.btn["B"]);
-});
+}, 300));
 // 左右旋轉按鈕
-btn_left.addEventListener("click", () => handleRotate("left"));
-btn_right.addEventListener("click", () => handleRotate("right"));
+btn_left.addEventListener("click", debounce(() => handleRotate("left"), 300));
+btn_right.addEventListener("click", debounce(() => handleRotate("right"), 300));
 // 前進按鈕
-btn_forward.addEventListener("click", () => {
+btn_forward.addEventListener("click", debounce(() => {
     const nextSceneIndex = user.now_scene_data.btn[NWSE_compass];
     if (nextSceneIndex) {
         if (is_efx_active) return;
@@ -1105,7 +1116,7 @@ btn_forward.addEventListener("click", () => {
         render_efx_fade_out(user.sceneIndex);
         movePlayer();
     }
-});
+}, 300));
 // 鍵盤事件
 document.addEventListener("keydown", (event) => {
     switch (event.key.toLowerCase()) {
@@ -1190,7 +1201,7 @@ function render_user_state(action, num) {
             case "harm":
                 
                 // 加入提示 
-                render_blood_animation("blood");
+                render_battle_animation("blood");
 
                 // 傷害確認 
                 const user_harm_timer = setTimeout(() => {
@@ -1212,7 +1223,7 @@ function render_user_state(action, num) {
                 if (user.heart < 0) {
                     user.heart = 0;
                     stop_game_timers();
-                    render_blood_animation("dead");
+                    render_battle_animation("dead");
                 }
             break;
             // 治療
@@ -1337,21 +1348,6 @@ pop_note.addEventListener("animationend", (event) => {
         screen.removeChild(pop_note);
     }
 });
-// ux 按鈕開關
-const ux_button_open = (value) => {
-
-    const sceneUxChildren = document.querySelector('#scene_ux').children;
-
-    if (value === true) {
-        Array.from(sceneUxChildren).forEach(child => {
-            child.style.pointerEvents = "auto";
-        });
-    } else if (value === false) {
-        Array.from(sceneUxChildren).forEach(child => {
-            child.style.pointerEvents = "none";
-        });
-    }
-};
 
 // Battle SYSTEM 遊戲中的第一迴圈 ------------------------------------------------------- 
 let enemy_move_calculator;
@@ -1915,7 +1911,7 @@ bag_close_panel.addEventListener("click", () => {
     });
 
     // 啟用 UX 按鈕
-    ux_button_open(true);
+    btn_switch_generator("scene_ux", true);
 });
 // 顯示物品
 const render_object_detail = (data, quantity) => {
@@ -2313,7 +2309,7 @@ btn_bag.addEventListener("click", debounce(() => {
 const render_bag_init = () => {
 
     bag_show = true;
-    ux_button_open(false);
+    btn_switch_generator("scene_ux", false);
 
     object_div.style.display = "none";
     facility_div.style.display = "none";
@@ -2524,7 +2520,7 @@ let album_show = false;
 const render_album_init = () => {
 
     album_show = true;
-    ux_button_open(false);
+    btn_switch_generator("scene_ux", false);
 
     object_div.style.display = "none";
     facility_div.style.display = "none";
@@ -2538,16 +2534,19 @@ const render_album_init = () => {
     // 更新物品
     render_album_slot();
 };
+
 // 重整相簿
 function render_album_slot() {
 
     album_inventory.innerHTML = "";
-
+    // 去重複
+    user.album = removeDuplicates(user.album, ["name"]);
+    
     // 更新槽位
     for (let i = 0; i < user.album.length; i++) {
 
         const item_slot = createDiv(0, "item_slot");
-
+        
         // 如果有物品
         if (user.album[i]) {
             const item = user.album[i];
@@ -2643,7 +2642,39 @@ function debounce(callbackFunction, delayTime = 100) {
             delayTime);
     };
 };
+// 去重復器
+function removeDuplicates(array, uniqueKeys = []) {
+    const seen = new Set();
+    const uniqueArray = [];
 
+    for (const item of array) {
+        // 如果指定了多個 uniqueKeys，組合鍵值
+        const key = uniqueKeys.length > 0 
+            ? uniqueKeys.map(k => item[k]).join(",") 
+            : JSON.stringify(item);
+
+        if (!seen.has(key)) {
+            seen.add(key);
+            uniqueArray.push(item);
+        }
+    }
+    return uniqueArray;
+};
+// 按鈕開關器
+function btn_switch_generator(container, value) {
+    console.log(container, value)
+    const sceneChildren = document.querySelector(`#${container}`).children;
+
+    if (value === true) {
+        Array.from(sceneChildren).forEach(child => {
+            child.style.pointerEvents = "auto";
+        });
+    } else if (value === false) {
+        Array.from(sceneChildren).forEach(child => {
+            child.style.pointerEvents = "none";
+        });
+    }
+};
 // 滑鼠
 const cursor = createDiv("cursor");
 screen.appendChild(cursor);
